@@ -11,6 +11,105 @@ public class FastANSI {
     public static final int COLOR_TYPE_8BIT = 1;
     public static final int COLOR_TYPE_24BIT = 2;
 
+    // --- ANSI Control & Style Constants ---
+    public static final String ESC = "\033";
+    public static final String CSI = "\033[";
+    
+    // Formatting & Styles
+    public static final String RESET = "\033[0m";
+    public static final String BOLD = "\033[1m";
+    public static final String BOLD_OFF = "\033[22m";
+    public static final String ITALIC = "\033[3m";
+    public static final String ITALIC_OFF = "\033[23m";
+    public static final String UNDERLINE = "\033[4m";
+    public static final String UNDERLINE_OFF = "\033[24m";
+    public static final String BLINK = "\033[5m";
+    public static final String BLINK_OFF = "\033[25m";
+    public static final String INVERT = "\033[7m";
+    public static final String INVERT_OFF = "\033[27m";
+    public static final String HIDE = "\033[8m";
+    public static final String HIDE_OFF = "\033[28m";
+    public static final String STRIKETHROUGH = "\033[9m";
+    public static final String STRIKETHROUGH_OFF = "\033[29m";
+
+    // 4-bit Foreground Colors (Standard)
+    public static final String FG_BLACK = "\033[30m";
+    public static final String FG_RED = "\033[31m";
+    public static final String FG_GREEN = "\033[32m";
+    public static final String FG_YELLOW = "\033[33m";
+    public static final String FG_BLUE = "\033[34m";
+    public static final String FG_MAGENTA = "\033[35m";
+    public static final String FG_CYAN = "\033[36m";
+    public static final String FG_WHITE = "\033[37m";
+    public static final String FG_DEFAULT = "\033[39m";
+
+    // 4-bit Foreground Colors (Bright)
+    public static final String FG_BRIGHT_BLACK = "\033[90m";
+    public static final String FG_BRIGHT_RED = "\033[91m";
+    public static final String FG_BRIGHT_GREEN = "\033[92m";
+    public static final String FG_BRIGHT_YELLOW = "\033[93m";
+    public static final String FG_BRIGHT_BLUE = "\033[94m";
+    public static final String FG_BRIGHT_MAGENTA = "\033[95m";
+    public static final String FG_BRIGHT_CYAN = "\033[96m";
+    public static final String FG_BRIGHT_WHITE = "\033[97m";
+
+    // 4-bit Background Colors (Standard)
+    public static final String BG_BLACK = "\033[40m";
+    public static final String BG_RED = "\033[41m";
+    public static final String BG_GREEN = "\033[42m";
+    public static final String BG_YELLOW = "\033[43m";
+    public static final String BG_BLUE = "\033[44m";
+    public static final String BG_MAGENTA = "\033[45m";
+    public static final String BG_CYAN = "\033[46m";
+    public static final String BG_WHITE = "\033[47m";
+    public static final String BG_DEFAULT = "\033[49m";
+
+    // 4-bit Background Colors (Bright)
+    public static final String BG_BRIGHT_BLACK = "\033[100m";
+    public static final String BG_BRIGHT_RED = "\033[101m";
+    public static final String BG_BRIGHT_GREEN = "\033[102m";
+    public static final String BG_BRIGHT_YELLOW = "\033[103m";
+    public static final String BG_BRIGHT_BLUE = "\033[104m";
+    public static final String BG_BRIGHT_MAGENTA = "\033[105m";
+    public static final String BG_BRIGHT_CYAN = "\033[106m";
+    public static final String BG_BRIGHT_WHITE = "\033[107m";
+
+    // Common Control Operations
+    public static final String ALT_BUFFER_ON = "\033[?1049h";
+    public static final String ALT_BUFFER_OFF = "\033[?1049l";
+    public static final String CURSOR_HIDE = "\033[?25l";
+    public static final String CURSOR_SHOW = "\033[?25h";
+    public static final String CLEAR_SCREEN = "\033[2J";
+    public static final String CLEAR_LINE = "\033[2K";
+    public static final String CURSOR_HOME = "\033[1;1H";
+
+    // --- Fluent Builder / Generator Utilities ---
+
+    /** Generates 24-bit True Color Foreground escape code */
+    public static String fg(int r, int g, int b) {
+        return "\033[38;2;" + r + ";" + g + ";" + b + "m";
+    }
+
+    /** Generates 24-bit True Color Background escape code */
+    public static String bg(int r, int g, int b) {
+        return "\033[48;2;" + r + ";" + g + ";" + b + "m";
+    }
+
+    /** Generates 8-bit index Foreground escape code */
+    public static String fg(int index) {
+        return "\033[38;5;" + index + "m";
+    }
+
+    /** Generates 8-bit index Background escape code */
+    public static String bg(int index) {
+        return "\033[48;5;" + index + "m";
+    }
+
+    /** Generates cursor positioning escape code */
+    public static String cursorTo(int row, int col) {
+        return "\033[" + row + ";" + col + "H";
+    }
+
     /**
      * Interface to receive low-overhead callbacks for every parsed ANSI sequence.
      * Implementing classes can process telemetry state natively with zero GC impact.
