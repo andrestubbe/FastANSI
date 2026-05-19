@@ -52,7 +52,7 @@ public class Demo {
 ---
 
 ## Table of Contents
-- [Our Mission](#-our-mission)
+- [Mission](#-mission)
 - [Key Features](#-key-features)
 - [Performance](#-performance)
 - [API Quick Reference](#-api-quick-reference)
@@ -64,8 +64,8 @@ public class Demo {
 
 ---
 
-## 🎯 Our Mission
-Our mission is to establish the fastest, most comprehensive escape sequence parser in the JVM universe. FastANSI enables terminal viewports to consume raw external ANSI dumps dynamically, process global terminal styling, and support custom 24-bit True Color rendering with zero garbage collection overhead.
+## 🎯 Mission
+The mission is to establish the fastest, most comprehensive escape sequence parser in the JVM universe. FastANSI enables terminal viewports to consume raw external ANSI dumps dynamically, process global terminal styling, and support custom 24-bit True Color rendering with zero garbage collection overhead.
 
 ---
 
