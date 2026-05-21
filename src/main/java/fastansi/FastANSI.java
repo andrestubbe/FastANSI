@@ -6,73 +6,73 @@ package fastansi;
  */
 public class FastANSI {
 
-    // Color Type Constants
-    public static final int COLOR_TYPE_4BIT = 0;
-    public static final int COLOR_TYPE_8BIT = 1;
-    public static final int COLOR_TYPE_24BIT = 2;
+    // Color Type Constants — see FastSGR.COLOR_TYPE_*
+    public static final int COLOR_TYPE_4BIT  = FastSGR.COLOR_TYPE_4BIT;
+    public static final int COLOR_TYPE_8BIT  = FastSGR.COLOR_TYPE_8BIT;
+    public static final int COLOR_TYPE_24BIT = FastSGR.COLOR_TYPE_24BIT;
 
     // --- ANSI Control & Style Constants ---
     public static final String ESC = "\033";
     public static final String CSI = "\033[";
-    
-    // Formatting & Styles
-    public static final String RESET = "\033[0m";
-    public static final String BOLD = "\033[1m";
-    public static final String BOLD_OFF = "\033[22m";
-    public static final String ITALIC = "\033[3m";
-    public static final String ITALIC_OFF = "\033[23m";
-    public static final String UNDERLINE = "\033[4m";
-    public static final String UNDERLINE_OFF = "\033[24m";
-    public static final String BLINK = "\033[5m";
-    public static final String BLINK_OFF = "\033[25m";
-    public static final String INVERT = "\033[7m";
-    public static final String INVERT_OFF = "\033[27m";
-    public static final String HIDE = "\033[8m";
-    public static final String HIDE_OFF = "\033[28m";
-    public static final String STRIKETHROUGH = "\033[9m";
-    public static final String STRIKETHROUGH_OFF = "\033[29m";
 
-    // 4-bit Foreground Colors (Standard)
-    public static final String FG_BLACK = "\033[30m";
-    public static final String FG_RED = "\033[31m";
-    public static final String FG_GREEN = "\033[32m";
-    public static final String FG_YELLOW = "\033[33m";
-    public static final String FG_BLUE = "\033[34m";
-    public static final String FG_MAGENTA = "\033[35m";
-    public static final String FG_CYAN = "\033[36m";
-    public static final String FG_WHITE = "\033[37m";
-    public static final String FG_DEFAULT = "\033[39m";
+    // Formatting & Styles — derived from FastSGR parameter numbers
+    public static final String RESET            = CSI + FastSGR.RESET         + "m";
+    public static final String BOLD             = CSI + FastSGR.BOLD_ON       + "m";
+    public static final String BOLD_OFF         = CSI + FastSGR.BOLD_OFF      + "m";
+    public static final String ITALIC           = CSI + FastSGR.ITALIC_ON     + "m";
+    public static final String ITALIC_OFF       = CSI + FastSGR.ITALIC_OFF    + "m";
+    public static final String UNDERLINE        = CSI + FastSGR.UNDERLINE_ON  + "m";
+    public static final String UNDERLINE_OFF    = CSI + FastSGR.UNDERLINE_OFF + "m";
+    public static final String BLINK            = CSI + FastSGR.BLINK_ON      + "m";
+    public static final String BLINK_OFF        = CSI + FastSGR.BLINK_OFF     + "m";
+    public static final String INVERT           = CSI + FastSGR.INVERT_ON     + "m";
+    public static final String INVERT_OFF       = CSI + FastSGR.INVERT_OFF    + "m";
+    public static final String HIDE             = CSI + FastSGR.HIDE_ON       + "m";
+    public static final String HIDE_OFF         = CSI + FastSGR.HIDE_OFF      + "m";
+    public static final String STRIKETHROUGH    = CSI + FastSGR.STRIKE_ON     + "m";
+    public static final String STRIKETHROUGH_OFF= CSI + FastSGR.STRIKE_OFF    + "m";
 
-    // 4-bit Foreground Colors (Bright)
-    public static final String FG_BRIGHT_BLACK = "\033[90m";
-    public static final String FG_BRIGHT_RED = "\033[91m";
-    public static final String FG_BRIGHT_GREEN = "\033[92m";
-    public static final String FG_BRIGHT_YELLOW = "\033[93m";
-    public static final String FG_BRIGHT_BLUE = "\033[94m";
-    public static final String FG_BRIGHT_MAGENTA = "\033[95m";
-    public static final String FG_BRIGHT_CYAN = "\033[96m";
-    public static final String FG_BRIGHT_WHITE = "\033[97m";
+    // 4-bit Foreground Colors (Standard) — derived from FastSGR
+    public static final String FG_BLACK   = CSI + FastSGR.FG_BLACK   + "m";
+    public static final String FG_RED     = CSI + FastSGR.FG_RED     + "m";
+    public static final String FG_GREEN   = CSI + FastSGR.FG_GREEN   + "m";
+    public static final String FG_YELLOW  = CSI + FastSGR.FG_YELLOW  + "m";
+    public static final String FG_BLUE    = CSI + FastSGR.FG_BLUE    + "m";
+    public static final String FG_MAGENTA = CSI + FastSGR.FG_MAGENTA + "m";
+    public static final String FG_CYAN    = CSI + FastSGR.FG_CYAN    + "m";
+    public static final String FG_WHITE   = CSI + FastSGR.FG_WHITE   + "m";
+    public static final String FG_DEFAULT = CSI + FastSGR.FG_RESET   + "m";
 
-    // 4-bit Background Colors (Standard)
-    public static final String BG_BLACK = "\033[40m";
-    public static final String BG_RED = "\033[41m";
-    public static final String BG_GREEN = "\033[42m";
-    public static final String BG_YELLOW = "\033[43m";
-    public static final String BG_BLUE = "\033[44m";
-    public static final String BG_MAGENTA = "\033[45m";
-    public static final String BG_CYAN = "\033[46m";
-    public static final String BG_WHITE = "\033[47m";
-    public static final String BG_DEFAULT = "\033[49m";
+    // 4-bit Foreground Colors (Bright) — derived from FastSGR
+    public static final String FG_BRIGHT_BLACK   = CSI + FastSGR.FG_BRIGHT_BLACK   + "m";
+    public static final String FG_BRIGHT_RED     = CSI + FastSGR.FG_BRIGHT_RED     + "m";
+    public static final String FG_BRIGHT_GREEN   = CSI + FastSGR.FG_BRIGHT_GREEN   + "m";
+    public static final String FG_BRIGHT_YELLOW  = CSI + FastSGR.FG_BRIGHT_YELLOW  + "m";
+    public static final String FG_BRIGHT_BLUE    = CSI + FastSGR.FG_BRIGHT_BLUE    + "m";
+    public static final String FG_BRIGHT_MAGENTA = CSI + FastSGR.FG_BRIGHT_MAGENTA + "m";
+    public static final String FG_BRIGHT_CYAN    = CSI + FastSGR.FG_BRIGHT_CYAN    + "m";
+    public static final String FG_BRIGHT_WHITE   = CSI + FastSGR.FG_BRIGHT_WHITE   + "m";
 
-    // 4-bit Background Colors (Bright)
-    public static final String BG_BRIGHT_BLACK = "\033[100m";
-    public static final String BG_BRIGHT_RED = "\033[101m";
-    public static final String BG_BRIGHT_GREEN = "\033[102m";
-    public static final String BG_BRIGHT_YELLOW = "\033[103m";
-    public static final String BG_BRIGHT_BLUE = "\033[104m";
-    public static final String BG_BRIGHT_MAGENTA = "\033[105m";
-    public static final String BG_BRIGHT_CYAN = "\033[106m";
-    public static final String BG_BRIGHT_WHITE = "\033[107m";
+    // 4-bit Background Colors (Standard) — derived from FastSGR
+    public static final String BG_BLACK   = CSI + FastSGR.BG_BLACK   + "m";
+    public static final String BG_RED     = CSI + FastSGR.BG_RED     + "m";
+    public static final String BG_GREEN   = CSI + FastSGR.BG_GREEN   + "m";
+    public static final String BG_YELLOW  = CSI + FastSGR.BG_YELLOW  + "m";
+    public static final String BG_BLUE    = CSI + FastSGR.BG_BLUE    + "m";
+    public static final String BG_MAGENTA = CSI + FastSGR.BG_MAGENTA + "m";
+    public static final String BG_CYAN    = CSI + FastSGR.BG_CYAN    + "m";
+    public static final String BG_WHITE   = CSI + FastSGR.BG_WHITE   + "m";
+    public static final String BG_DEFAULT = CSI + FastSGR.BG_RESET   + "m";
+
+    // 4-bit Background Colors (Bright) — derived from FastSGR
+    public static final String BG_BRIGHT_BLACK   = CSI + FastSGR.BG_BRIGHT_BLACK   + "m";
+    public static final String BG_BRIGHT_RED     = CSI + FastSGR.BG_BRIGHT_RED     + "m";
+    public static final String BG_BRIGHT_GREEN   = CSI + FastSGR.BG_BRIGHT_GREEN   + "m";
+    public static final String BG_BRIGHT_YELLOW  = CSI + FastSGR.BG_BRIGHT_YELLOW  + "m";
+    public static final String BG_BRIGHT_BLUE    = CSI + FastSGR.BG_BRIGHT_BLUE    + "m";
+    public static final String BG_BRIGHT_MAGENTA = CSI + FastSGR.BG_BRIGHT_MAGENTA + "m";
+    public static final String BG_BRIGHT_CYAN    = CSI + FastSGR.BG_BRIGHT_CYAN    + "m";
+    public static final String BG_BRIGHT_WHITE   = CSI + FastSGR.BG_BRIGHT_WHITE   + "m";
 
     // Common Control Operations
     public static final String ALT_BUFFER_ON = "\033[?1049h";
@@ -85,29 +85,29 @@ public class FastANSI {
 
     // --- Fluent Builder / Generator Utilities ---
 
-    /** Generates 24-bit True Color Foreground escape code */
+    /** Generates a 24-bit true color foreground escape code. */
     public static String fg(int r, int g, int b) {
-        return "\033[38;2;" + r + ";" + g + ";" + b + "m";
+        return CSI + FastSGR.FG_EXT + ";" + FastSGR.EXT_24BIT + ";" + r + ";" + g + ";" + b + "m";
     }
 
-    /** Generates 24-bit True Color Background escape code */
+    /** Generates a 24-bit true color background escape code. */
     public static String bg(int r, int g, int b) {
-        return "\033[48;2;" + r + ";" + g + ";" + b + "m";
+        return CSI + FastSGR.BG_EXT + ";" + FastSGR.EXT_24BIT + ";" + r + ";" + g + ";" + b + "m";
     }
 
-    /** Generates 8-bit index Foreground escape code */
+    /** Generates an 8-bit (256-color) index foreground escape code. */
     public static String fg(int index) {
-        return "\033[38;5;" + index + "m";
+        return CSI + FastSGR.FG_EXT + ";" + FastSGR.EXT_8BIT + ";" + index + "m";
     }
 
-    /** Generates 8-bit index Background escape code */
+    /** Generates an 8-bit (256-color) index background escape code. */
     public static String bg(int index) {
-        return "\033[48;5;" + index + "m";
+        return CSI + FastSGR.BG_EXT + ";" + FastSGR.EXT_8BIT + ";" + index + "m";
     }
 
-    /** Generates cursor positioning escape code */
+    /** Generates a cursor positioning escape code. */
     public static String cursorTo(int row, int col) {
-        return "\033[" + row + ";" + col + "H";
+        return CSI + row + ";" + col + "H";
     }
 
     /**
@@ -372,113 +372,90 @@ public class FastANSI {
 
     /**
      * Resolves the Select Graphic Rendition (SGR) parameter stack.
-     * Correctly handles text styles, standard 4-bit indices, 8-bit index colors, and 24-bit RGB values.
+     * <p>
+     * Uses named constants from {@link FastSGR} instead of magic numbers.
+     * The switch handles all single-value codes; range checks cover 4-bit color
+     * bands; the extended block handles 8-bit (38;5;idx) and 24-bit (38;2;r;g;b).
+     * Bitwise OR in range checks avoids short-circuit branching for better
+     * branch-predictor behaviour on hot paths.
      */
     private static void parseSGR(int[] params, int count, ANSIListener listener) {
-        int idx = 0;
-        while (idx < count) {
-            int p = params[idx];
+        int i = 0;
+        while (i < count) {
+            int v = params[i];
 
-            if (p == 0) {
-                listener.onReset();
-                idx++;
-            } else if (p == 1) {
-                listener.onBold(true);
-                idx++;
-            } else if (p == 22) {
-                listener.onBold(false);
-                idx++;
-            } else if (p == 3) {
-                listener.onItalic(true);
-                idx++;
-            } else if (p == 23) {
-                listener.onItalic(false);
-                idx++;
-            } else if (p == 4) {
-                listener.onUnderline(true);
-                idx++;
-            } else if (p == 24) {
-                listener.onUnderline(false);
-                idx++;
-            } else if (p == 5) {
-                listener.onBlink(true);
-                idx++;
-            } else if (p == 25) {
-                listener.onBlink(false);
-                idx++;
-            } else if (p == 7) {
-                listener.onInvert(true);
-                idx++;
-            } else if (p == 27) {
-                listener.onInvert(false);
-                idx++;
-            } else if (p == 8) {
-                listener.onHide(true);
-                idx++;
-            } else if (p == 28) {
-                listener.onHide(false);
-                idx++;
-            } else if (p == 9) {
-                listener.onStrikethrough(true);
-                idx++;
-            } else if (p == 29) {
-                listener.onStrikethrough(false);
-                idx++;
+            // --- Single-value SGR codes (styles + resets) ---
+            switch (v) {
+                case FastSGR.RESET:          listener.onReset();                                        i++; continue;
+                case FastSGR.BOLD_ON:        listener.onBold(true);                                     i++; continue;
+                case FastSGR.BOLD_OFF:       listener.onBold(false);                                    i++; continue;
+                case FastSGR.ITALIC_ON:      listener.onItalic(true);                                   i++; continue;
+                case FastSGR.ITALIC_OFF:     listener.onItalic(false);                                  i++; continue;
+                case FastSGR.UNDERLINE_ON:   listener.onUnderline(true);                                i++; continue;
+                case FastSGR.UNDERLINE_OFF:  listener.onUnderline(false);                               i++; continue;
+                case FastSGR.BLINK_ON:       listener.onBlink(true);                                    i++; continue;
+                case FastSGR.BLINK_OFF:      listener.onBlink(false);                                   i++; continue;
+                case FastSGR.INVERT_ON:      listener.onInvert(true);                                   i++; continue;
+                case FastSGR.INVERT_OFF:     listener.onInvert(false);                                  i++; continue;
+                case FastSGR.HIDE_ON:        listener.onHide(true);                                     i++; continue;
+                case FastSGR.HIDE_OFF:       listener.onHide(false);                                    i++; continue;
+                case FastSGR.STRIKE_ON:      listener.onStrikethrough(true);                            i++; continue;
+                case FastSGR.STRIKE_OFF:     listener.onStrikethrough(false);                           i++; continue;
+                case FastSGR.FG_RESET:       listener.onForegroundColor(COLOR_TYPE_4BIT, -1, 0, 0);    i++; continue;
+                case FastSGR.BG_RESET:       listener.onBackgroundColor(COLOR_TYPE_4BIT, -1, 0, 0);    i++; continue;
             }
-            // Standard 3-bit / 4-bit Foreground Colors
-            else if (p >= 30 && p <= 37) {
-                listener.onForegroundColor(COLOR_TYPE_4BIT, p - 30, 0, 0);
-                idx++;
-            } else if (p >= 90 && p <= 97) {
-                listener.onForegroundColor(COLOR_TYPE_4BIT, p - 90 + 8, 0, 0); // Bright range
-                idx++;
-            } else if (p == 39) {
-                listener.onForegroundColor(COLOR_TYPE_4BIT, -1, 0, 0); // Reset foreground to default
-                idx++;
+
+            // --- 4-bit Foreground: standard (30–37) and bright (90–97) ---
+            if ((v >= FastSGR.FG_BASE && v <= FastSGR.FG_BASE + 7) |
+                (v >= FastSGR.FG_BRIGHT_BASE && v <= FastSGR.FG_BRIGHT_BASE + 7)) {
+                int idx = (v < FastSGR.FG_BRIGHT_BASE)
+                        ? (v - FastSGR.FG_BASE)
+                        : (v - FastSGR.FG_BRIGHT_BASE + 8);
+                listener.onForegroundColor(COLOR_TYPE_4BIT, idx, 0, 0);
+                i++;
+                continue;
             }
-            // Standard 3-bit / 4-bit Background Colors
-            else if (p >= 40 && p <= 47) {
-                listener.onBackgroundColor(COLOR_TYPE_4BIT, p - 40, 0, 0);
-                idx++;
-            } else if (p >= 100 && p <= 107) {
-                listener.onBackgroundColor(COLOR_TYPE_4BIT, p - 100 + 8, 0, 0); // Bright range
-                idx++;
-            } else if (p == 49) {
-                listener.onBackgroundColor(COLOR_TYPE_4BIT, -1, 0, 0); // Reset background to default
-                idx++;
+
+            // --- 4-bit Background: standard (40–47) and bright (100–107) ---
+            if ((v >= FastSGR.BG_BASE && v <= FastSGR.BG_BASE + 7) |
+                (v >= FastSGR.BG_BRIGHT_BASE && v <= FastSGR.BG_BRIGHT_BASE + 7)) {
+                int idx = (v < FastSGR.BG_BRIGHT_BASE)
+                        ? (v - FastSGR.BG_BASE)
+                        : (v - FastSGR.BG_BRIGHT_BASE + 8);
+                listener.onBackgroundColor(COLOR_TYPE_4BIT, idx, 0, 0);
+                i++;
+                continue;
             }
-            // Advanced Color Modes (8-bit or 24-bit True Color)
-            else if (p == 38) { // Advanced Foreground
-                if (idx + 2 < count && params[idx + 1] == 5) { // 8-bit index
-                    int colorIdx = params[idx + 2];
-                    listener.onForegroundColor(COLOR_TYPE_8BIT, colorIdx, 0, 0);
-                    idx += 3;
-                } else if (idx + 4 < count && params[idx + 1] == 2) { // 24-bit True RGB Color
-                    int r = params[idx + 2];
-                    int g = params[idx + 3];
-                    int b = params[idx + 4];
-                    listener.onForegroundColor(COLOR_TYPE_24BIT, r, g, b);
-                    idx += 5;
-                } else {
-                    idx++; // Faulty sequence skip
+
+            // --- Extended color: 8-bit (38;5;idx / 48;5;idx) or 24-bit (38;2;r;g;b / 48;2;r;g;b) ---
+            if (v == FastSGR.FG_EXT || v == FastSGR.BG_EXT) {
+                boolean fg = (v == FastSGR.FG_EXT);
+
+                if (i + 2 < count && params[i + 1] == FastSGR.EXT_8BIT) {
+                    // 8-bit index color
+                    int colorIdx = params[i + 2];
+                    if (fg) listener.onForegroundColor(COLOR_TYPE_8BIT, colorIdx, 0, 0);
+                    else    listener.onBackgroundColor(COLOR_TYPE_8BIT, colorIdx, 0, 0);
+                    i += 3;
+                    continue;
                 }
-            } else if (p == 48) { // Advanced Background
-                if (idx + 2 < count && params[idx + 1] == 5) { // 8-bit index
-                    int colorIdx = params[idx + 2];
-                    listener.onBackgroundColor(COLOR_TYPE_8BIT, colorIdx, 0, 0);
-                    idx += 3;
-                } else if (idx + 4 < count && params[idx + 1] == 2) { // 24-bit True RGB Color
-                    int r = params[idx + 2];
-                    int g = params[idx + 3];
-                    int b = params[idx + 4];
-                    listener.onBackgroundColor(COLOR_TYPE_24BIT, r, g, b);
-                    idx += 5;
-                } else {
-                    idx++; // Faulty sequence skip
+
+                if (i + 4 < count && params[i + 1] == FastSGR.EXT_24BIT) {
+                    // 24-bit true color
+                    int r = params[i + 2], g = params[i + 3], b = params[i + 4];
+                    if (fg) listener.onForegroundColor(COLOR_TYPE_24BIT, r, g, b);
+                    else    listener.onBackgroundColor(COLOR_TYPE_24BIT, r, g, b);
+                    i += 5;
+                    continue;
                 }
-            } else {
-                idx++; // Unknown SGR param skip
+
+                // Malformed extended sequence — skip introducer
+                i++;
+                continue;
             }
+
+            // Unknown SGR parameter — skip
+            i++;
         }
     }
 }
