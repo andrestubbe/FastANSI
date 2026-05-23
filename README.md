@@ -1,4 +1,4 @@
-# FastANSI — High-Performance ANSI & VT Escape Sequence Parser for Java [v0.1.0]
+﻿# FastANSI — High-Performance ANSI & VT Escape Sequence Parser for Java [v0.1.0]
 
 **A zero-dependency, zero-allocation UTF-16 ANSI and VT100/VT220/Xterm escape sequence parser for Java, engineered for ultra-high-performance TUI layouts, terminal graphics, and console telemetry pipelines.**
 
