@@ -2,15 +2,15 @@
 
 **A zero-dependency, zero-allocation UTF-16 ANSI and VT100/VT220/Xterm escape sequence parser for Java, engineered for ultra-high-performance TUI layouts, terminal graphics, and console telemetry pipelines.**
 
-[![Build](https://img.shields.io/github/actions/workflow/status/andrestubbe/FastANSI/maven.yml?branch=main)](https://github.com/andrestubbe/FastANSI/actions)
-[![Java](https://img.shields.io/badge/Java-17+-blue.svg)](https://www.java.com)
-[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)]()
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![JitPack](https://jitpack.io/v/andrestubbe/FastANSI.svg)](https://jitpack.io/#andrestubbe/FastANSI)
-
 FastANSI is the dedicated high-speed text processing substrate of the **FastJava** ecosystem. It introduces a highly optimized, stack-free procedural state machine designed to parse raw terminal output streams containing styles, cursor movements, and custom colors into structured cell representations at the physical hardware level.
 
 By operating with absolutely **exactly zero object allocations** on the Java heap, FastANSI is 100% garbage-collection-free and suited to run in demanding, high-throughput console-composing pipelines.
+
+[![Status](https://img.shields.io/badge/status-v0.1.0-brightgreen.svg)](https://github.com/andrestubbe/FastANSI/releases/tag/v0.1.0)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Java](https://img.shields.io/badge/Java-17+-blue.svg)](https://www.java.com)
+[![Platform](https://img.shields.io/badge/Platform-Windows%2010+-lightgrey.svg)]()
+[![JitPack](https://img.shields.io/badge/JitPack-ready-green.svg)](https://jitpack.io/#andrestubbe)
 
 ---
 
