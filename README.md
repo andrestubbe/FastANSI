@@ -1,4 +1,11 @@
-﻿# FastANSI — High-Performance ANSI & VT Escape Sequence Parser for Java [v0.1.0]
+﻿# FastANSI v0.1.0 [ALPHA] — High-Performance ANSI & VT Escape Sequence Parser for Java
+
+[![Status](https://img.shields.io/badge/status-v0.1.0-brightgreen.svg)](https://github.com/andrestubbe/FastANSI/releases/tag/v0.1.0)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Java](https://img.shields.io/badge/Java-17+-blue.svg)](https://www.java.com)
+[![Platform](https://img.shields.io/badge/Platform-Windows%2010+-lightgrey.svg)]()
+[![JitPack](https://img.shields.io/badge/JitPack-ready-green.svg)](https://jitpack.io/#andrestubbe)
+
 
 **A zero-dependency, zero-allocation UTF-16 ANSI and VT100/VT220/Xterm escape sequence parser for Java, engineered for ultra-high-performance TUI layouts, terminal graphics, and console telemetry pipelines.**
 
@@ -6,11 +13,6 @@ FastANSI is the dedicated high-speed text processing substrate of the **FastJava
 
 By operating with absolutely **exactly zero object allocations** on the Java heap, FastANSI is 100% garbage-collection-free and suited to run in demanding, high-throughput console-composing pipelines.
 
-[![Status](https://img.shields.io/badge/status-v0.1.0-brightgreen.svg)](https://github.com/andrestubbe/FastANSI/releases/tag/v0.1.0)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Java](https://img.shields.io/badge/Java-17+-blue.svg)](https://www.java.com)
-[![Platform](https://img.shields.io/badge/Platform-Windows%2010+-lightgrey.svg)]()
-[![JitPack](https://img.shields.io/badge/JitPack-ready-green.svg)](https://jitpack.io/#andrestubbe)
 
 ---
 
