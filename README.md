@@ -6,6 +6,8 @@
 [![Platform](https://img.shields.io/badge/Platform-Windows%2010+-lightgrey.svg)]()
 [![JitPack](https://img.shields.io/badge/JitPack-ready-green.svg)](https://jitpack.io/#andrestubbe)
 
+---
+
 **⚡ A zero-dependency, zero-allocation UTF-16 ANSI and VT100/VT220/Xterm escape sequence parser for Java, engineered for
 ultra-high-performance TUI layouts, terminal graphics, and console telemetry pipelines.**
 
@@ -16,9 +18,9 @@ movements, and custom colors into structured cell representations at the physica
 By operating with absolutely **exactly zero object allocations** on the Java heap, FastANSI is 100%
 garbage-collection-free and suited to run in demanding, high-throughput console-composing pipelines.
 
+---
+
 [![FastFileIndex Showcase](docs/screenshot.png)](https://www.youtube.com/watch?v=BZsqQl7WqWk)
-
-
 
 ---
 
