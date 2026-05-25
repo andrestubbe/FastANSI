@@ -18,6 +18,24 @@ garbage-collection-free and suited to run in demanding, high-throughput console-
 
 [![FastFileIndex Showcase](docs/screenshot.png)](https://www.youtube.com/watch?v=BZsqQl7WqWk)
 
+
+
+---
+
+## Table of Contents
+
+- [Mission](#-mission)
+- [Key Features](#-key-features)
+- [Performance](#-performance)
+- [API Quick Reference](#-api-quick-reference)
+- [Installation](#-installation)
+- [Documentation](#-documentation)
+- [Platform Support](#-platform-support)
+- [Modular Ecosystem](#-modular-ecosystem)
+- [License](#-license)
+
+---
+
 ```java
 // Quick Start — Example
 
@@ -53,20 +71,6 @@ public class Demo {
     }
 }
 ```
-
----
-
-## Table of Contents
-
-- [Mission](#-mission)
-- [Key Features](#-key-features)
-- [Performance](#-performance)
-- [API Quick Reference](#-api-quick-reference)
-- [Installation](#-installation)
-- [Documentation](#-documentation)
-- [Platform Support](#-platform-support)
-- [Modular Ecosystem](#-modular-ecosystem)
-- [License](#-license)
 
 ---
 
