@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.andrestubbe</groupId>
-    <artifactId>fastansi</artifactId>
-    <version>0.1.0</version>
+    <artifactId>FastANSI</artifactId>
+    <version>main-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>FastANSI</name>

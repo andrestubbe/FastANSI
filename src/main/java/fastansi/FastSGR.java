@@ -42,7 +42,7 @@ public final class FastSGR {
     public static final int ITALIC_ON     = 3;
     /** Underline (single). */
     public static final int UNDERLINE_ON  = 4;
-    /** Slow blink (< 150 per minute). */
+    /** Slow blink (&lt; 150 per minute). */
     public static final int BLINK_ON      = 5;
     /** Reverse video (swap fg/bg). */
     public static final int INVERT_ON     = 7;
