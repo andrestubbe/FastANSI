@@ -114,10 +114,10 @@ frameworks:
 
 | Method                   | Description                                                                            | Path                              |
 |--------------------------|----------------------------------------------------------------------------------------|-----------------------------------|
-| `parse(input, listener)` | Parses a text stream procedurally, triggering corresponding callbacks on the listener. | [Reference →](REFERENCE.md#parse) |
+| `parse(input, listener)` | Parses a text stream procedurally, triggering corresponding callbacks on the listener. | [Reference →](docs/REFERENCE.md#parse) |
 
 > [!TIP]
-> See **[REFERENCE.md](REFERENCE.md)** for complete callback listings, SGR color codes, and parsed parameters.
+> See **[REFERENCE.md](docs/REFERENCE.md)** for complete callback listings, SGR color codes, and parsed parameters.
 
 ---
 
@@ -172,10 +172,10 @@ Download the pre-compiled JAR directly to add to your project's classpath:
 
 ## Documentation
 
-* **[COMPILE.md](COMPILE.md)**: Full compilation guide (MSVC C++17 build chain + JNI Setup).
-* **[REFERENCE.md](REFERENCE.md)**: Exhaustive catalog of SGR styles, OSC window parameters, and callback contracts.
-* **[PHILOSOPHIE.md](PHILOSOPHIE.md)**: Zero-allocation and low-overhead processing designs.
-* **[ROADMAP.md](ROADMAP.md)**: Planned milestone features and performance extensions.
+* **[REFERENCE.md](docs/REFERENCE.md)**: Exhaustive catalog of SGR styles, OSC window parameters, and callback contracts.
+* **[PHILOSOPHIE.md](docs/PHILOSOPHIE.md)**: Zero-allocation and low-overhead processing designs.
+* **[ROADMAP.md](docs/ROADMAP.md)**: Planned milestone features and performance extensions.
+* **[CHANGELOG.md](docs/CHANGELOG.md)**: Planned milestone features and performance extensions.
 
 ---
 
