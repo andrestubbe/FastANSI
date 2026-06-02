@@ -1,4 +1,4 @@
-﻿# FastANSI v0.1.0 [ALPHA] — High-Performance ANSI & VT Escape Sequence Parser for Java
+# FastANSI v0.1.0 [ALPHA] — High-Performance ANSI & VT Escape Sequence Parser for Java
 
 [![Status](https://img.shields.io/badge/status-v0.1.0-brightgreen.svg)](https://github.com/andrestubbe/FastANSI/releases/tag/v0.1.0)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -100,13 +100,17 @@ terminal viewports to consume raw external ANSI dumps dynamically, process globa
 
 ## 📊 Performance
 
-FastANSI is designed to process massive text buffers exponentially faster than traditional regex-based parser
-frameworks:
+FastANSI achieves **Native-First Performance** through a zero-allocation state machine, bypassing standard Java `String` regex overhead and garbage collection entirely.
 
-| Operation               | Regex Split-Parser | FastANSI State Engine | Speedup | Allocations |
-|-------------------------|--------------------|-----------------------|---------|-------------|
-| Parse 10KB Buffer       | 1.8 ms             | 0.04 ms               | **45x** | **Zero**    |
-| Parse Color ANSI String | 45,000 ns          | 920 ns                | **48x** | **Zero**    |
+[![JMH Benchmark Video](https://img.youtube.com/vi/SEEYP7PdYNk/maxresdefault.jpg)](https://www.youtube.com/watch?v=SEEYP7PdYNk)
+*Watch the live JMH benchmark comparison.*
+
+### JMH Benchmark Results (JDK 25)
+*Benchmark: Stripping ANSI escape codes from a text string.*
+
+| Operation | Standard Regex (`replaceAll`) | FastANSI State Engine | Speedup | Allocations (GC) |
+| :--- | :--- | :--- | :--- | :--- |
+| **Strip ANSI String** | ~478 ns / op | **~99 ns / op** | **~4.8x** | **Zero** |
 
 ---
 
