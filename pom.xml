@@ -33,6 +33,13 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- FastTerminal — terminal size via JNI -->
+        <dependency>
+            <groupId>com.github.andrestubbe</groupId>
+            <artifactId>FastTerminal</artifactId>
+            <version>0.1.0</version>
+            <scope>test</scope>
+        </dependency>
         <!-- JMH Benchmarking -->
         <dependency>
             <groupId>org.openjdk.jmh</groupId>
