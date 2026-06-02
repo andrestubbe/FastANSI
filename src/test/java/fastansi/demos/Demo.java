@@ -16,9 +16,9 @@ import java.io.File;
  *   2. BLOCK   — Background-colored spaces (purest pixel)
  *   3. HYBRID  — Both combined
  *
- * Usage:  run-demo6.bat path/to/image.png
+ * Usage:  run-demo.bat path/to/image.png
  */
-public class Demo6ImageViewer {
+public class Demo {
 
     public static void main(String[] args) throws Exception {
         String imagePath = args.length > 0 ? args[0] : "docs/screenshot.png";
