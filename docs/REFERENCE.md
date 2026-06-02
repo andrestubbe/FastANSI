@@ -42,3 +42,34 @@ Dispatched when foreground or background colors change.
     * `COLOR_TYPE_4BIT (0)`: Standard 16 colors. Index is passed in parameter `r` (0 to 15, or -1 to reset to default).
     * `COLOR_TYPE_8BIT (1)`: 256 color index. Index is passed in parameter `r` (0 to 255).
     * `COLOR_TYPE_24BIT (2)`: Packed 24-bit True RGB Color. RGB color parameters are passed directly via `r`, `g`, and `b` (0 to 255).
+
+---
+
+## 🏗️ Generator Utilities (`FastANSI`)
+FastANSI includes zero-allocation string builders to format ANSI strings on the fly.
+
+### Color Generators
+* `FastANSI.fg(int r, int g, int b)`: Generates 24-bit TrueColor foreground.
+* `FastANSI.bg(int r, int g, int b)`: Generates 24-bit TrueColor background.
+* `FastANSI.fg(int index)`: Generates 8-bit index foreground.
+* `FastANSI.bg(int index)`: Generates 8-bit index background.
+
+### Cursor & Display Controls
+* `FastANSI.cursorTo(int row, int col)`: Generates absolute cursor positioning (`ESC[row;colH`).
+* Built-in Constants: `FastANSI.CLEAR_SCREEN`, `FastANSI.CURSOR_HIDE`, `FastANSI.ALT_BUFFER_ON`, etc.
+
+---
+
+## 🖼️ FastAnsiImage
+High-performance Image-to-ANSI renderer included natively in the library.
+
+### `FastAnsiImage.render`
+```java
+public static String render(BufferedImage src, int termCols, int termRows, Mode mode)
+```
+Converts an image directly into an ANSI string with automatic aspect ratio correction for terminals.
+
+**Modes:**
+* `Mode.RAMP`: Luminance to density characters, with foreground color (Classic ANSI art).
+* `Mode.BLOCK`: Background-colored spaces (Purest color accuracy, pixel look).
+* `Mode.HYBRID`: Background-colored spaces overlaid with brightened foreground density characters (Maximum depth).

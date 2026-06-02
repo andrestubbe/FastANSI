@@ -11,8 +11,8 @@
 ## 🚀 Active Milestones (v0.2.0)
 * [ ] **FastTerminal Integration**:
   * [ ] Integrate `FastANSI` as a utility inside `FastTerminalScene` to allow writing styled ANSI string blocks natively.
-* [ ] **JMH Micro-Benchmarks**:
-  * [ ] Benchmark `FastANSI` against standard regex-based or split-based ANSI parsers to officially confirm speedups.
+* [x] **JMH Micro-Benchmarks**:
+  * [x] Benchmark `FastANSI` against standard regex-based or split-based ANSI parsers to officially confirm speedups.
 
 ---
 

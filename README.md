@@ -20,27 +20,38 @@ garbage-collection-free and suited to run in demanding, high-throughput console-
 
 ---
 
-[![FastFileIndex Showcase](docs/screenshot.png)](https://www.youtube.com/watch?v=BZsqQl7WqWk)
+ [**Watch the JMH Benchmark**](https://www.youtube.com/watch?v=SEEYP7PdYNk)
+
+[![FastANSI Showcase](docs/screenshot.png)](https://www.youtube.com/watch?v=BZsqQl7WqWk)
 
 ---
 
 ## Table of Contents
 
-- [Mission](#-mission)
-- [Key Features](#-key-features)
-- [Performance](#-performance)
-- [API Quick Reference](#-api-quick-reference)
-- [Installation](#-installation)
-- [Documentation](#-documentation)
-- [Platform Support](#-platform-support)
-- [Modular Ecosystem](#-modular-ecosystem)
-- [License](#-license)
+- [Why FastANSI?](#why-fastansi)
+- [Key Features](#key-features)
+- [Performance](#performance)
+- [API Quick Reference](#api-quick-reference)
+- [Installation](#installation)
+- [Documentation](#documentation)
+- [Platform Support](#platform-support)
+- [Related Projects](#related-projects)
+- [License](#license)
 
 ---
 
-```java
-// Quick Start — Example
+## Why FastANSI?
 
+The mission is to establish the fastest, most comprehensive escape sequence parser in the JVM universe. FastANSI enables
+terminal viewports to consume raw external ANSI dumps dynamically, process global terminal styling, and support custom
+24-bit True Color rendering with zero garbage collection overhead.
+
+---
+
+
+## Quick Start
+
+```java
 import fastansi.FastANSI;
 
 public class Demo {
@@ -76,15 +87,7 @@ public class Demo {
 
 ---
 
-## 🎯 Mission
-
-The mission is to establish the fastest, most comprehensive escape sequence parser in the JVM universe. FastANSI enables
-terminal viewports to consume raw external ANSI dumps dynamically, process global terminal styling, and support custom
-24-bit True Color rendering with zero garbage collection overhead.
-
----
-
-## ✨ Key Features
+## Key Features
 
 * **🚫 Zero Dependencies** — Completely standalone, lightweight, pure Java 17 library.
 * **⚡ Zero Heap Allocation** — Renders cell properties purely using coordinate pointers (`start`, `end`) and primitives,
@@ -98,64 +101,63 @@ terminal viewports to consume raw external ANSI dumps dynamically, process globa
 
 ---
 
-## 📊 Performance
+## Performance
 
-FastANSI achieves **Native-First Performance** through a zero-allocation state machine, bypassing standard Java `String` regex overhead and garbage collection entirely.
+FastANSI is rigorously profiled using **JMH** to guarantee zero overhead.
+[**Watch the JMH Benchmark**](https://www.youtube.com/watch?v=SEEYP7PdYNk)
 
-[![JMH Benchmark Video](https://img.youtube.com/vi/SEEYP7PdYNk/maxresdefault.jpg)](https://www.youtube.com/watch?v=SEEYP7PdYNk)
-*Watch the live JMH benchmark comparison.*
-
-### JMH Benchmark Results (JDK 25)
 *Benchmark: Stripping ANSI escape codes from a text string.*
 
 | Operation | Standard Regex (`replaceAll`) | FastANSI State Engine | Speedup | Allocations (GC) |
 | :--- | :--- | :--- | :--- | :--- |
 | **Strip ANSI String** | ~478 ns / op | **~99 ns / op** | **~4.8x** | **Zero** |
 
+*Measured on Windows 11, Intel Core i5-1135G7 (Surface Pro 8), JDK 25.0.1. The engine bypasses `Thread.sleep` via `FastDWM` to guarantee zero-jitter native heartbeats even under GC pressure.*
+
+
 ---
 
-## 📊 API Quick Reference
+## API Quick Reference
 
 | Method                   | Description                                                                            | Path                              |
 |--------------------------|----------------------------------------------------------------------------------------|-----------------------------------|
 | `parse(input, listener)` | Parses a text stream procedurally, triggering corresponding callbacks on the listener. | [Reference →](docs/REFERENCE.md#parse) |
+| `fg(r, g, b)` / `fg(idx)`| Generates 24-bit TrueColor or 8-bit index foreground ANSI escape sequences.            | `FastANSI.java`                   |
+| `bg(r, g, b)` / `bg(idx)`| Generates 24-bit TrueColor or 8-bit index background ANSI escape sequences.            | `FastANSI.java`                   |
+| `cursorTo(row, col)`     | Generates cursor absolute positioning escape codes.                                    | `FastANSI.java`                   |
 
 > [!TIP]
 > See **[REFERENCE.md](docs/REFERENCE.md)** for complete callback listings, SGR color codes, and parsed parameters.
 
 ---
 
-## 📥 Installation
+## Installation
 
 FastANSI is pure-Java and has **zero external dependencies**.
 
-### Option 1: Maven (JitPack)
+### Option 1: Maven (Recommended)
 
-Add the JitPack repository and the dependency inside your `pom.xml`:
+Add the JitPack repository and the dependency to your `pom.xml`:
 
 ```xml
-
 <repositories>
     <repository>
         <id>jitpack.io</id>
         <url>https://jitpack.io</url>
     </repository>
 </repositories>
-
 <dependencies>
-<dependency>
-    <groupId>com.github.andrestubbe</groupId>
-    <artifactId>FastANSI</artifactId>
-    <version>v0.1.0</version>
-</dependency>
+    <dependency>
+        <groupId>com.github.andrestubbe</groupId>
+        <artifactId>FastANSI</artifactId>
+        <version>v0.1.0</version>
+    </dependency>
 </dependencies>
 ```
 
-### Option 2: Gradle (JitPack)
+### Option 2: Gradle (via JitPack)
 
-Add this to your `build.gradle` file:
-
-```gradle
+```groovy
 repositories {
     maven { url 'https://jitpack.io' }
 }
@@ -167,10 +169,9 @@ dependencies {
 
 ### Option 3: Direct Download (No Build Tool)
 
-Download the pre-compiled JAR directly to add to your project's classpath:
+Download the latest JAR directly to add it to your classpath:
 
-* 📦 [**fastansi-v0.1.0.jar**](https://github.com/andrestubbe/FastANSI/releases/download/v0.1.0/fastansi-0.1.0.jar) (Core
-  Library)
+1. 📦 **[fastansi-v0.1.0.jar](https://github.com/andrestubbe/FastANSI/releases/download/v0.1.0/fastansi-0.1.0.jar)** (The Core Library)
 
 ---
 
