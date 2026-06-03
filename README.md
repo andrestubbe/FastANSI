@@ -178,7 +178,7 @@ Download the latest JAR directly to add it to your classpath:
 ## Documentation
 
 * **[REFERENCE.md](docs/REFERENCE.md)**: Exhaustive catalog of SGR styles, OSC window parameters, and callback contracts.
-* **[PHILOSOPHIE.md](docs/PHILOSOPHIE.md)**: Zero-allocation and low-overhead processing designs.
+* **[PHILOSOPHY.md](docs/PHILOSOPHY.md)**: Zero-allocation and low-overhead processing designs.
 * **[ROADMAP.md](docs/ROADMAP.md)**: Planned milestone features and performance extensions.
 * **[CHANGELOG.md](docs/CHANGELOG.md)**: Planned milestone features and performance extensions.
 
