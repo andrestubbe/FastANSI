@@ -1,6 +1,6 @@
-# FastANSI v0.1.0 [ALPHA] — High-Performance ANSI & VT Escape Sequence Parser for Java
+# FastANSI 0.1.0 [ALPHA] — High-Performance ANSI & VT Escape Sequence Parser for Java
 
-[![Status](https://img.shields.io/badge/status-v0.1.0-brightgreen.svg)](https://github.com/andrestubbe/FastANSI/releases/tag/v0.1.0)
+[![Status](https://img.shields.io/badge/status-0.1.0-brightgreen.svg)](https://github.com/andrestubbe/FastANSI/releases/tag/0.1.0)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Java](https://img.shields.io/badge/Java-17+-blue.svg)](https://www.java.com)
 [![Platform](https://img.shields.io/badge/Platform-Windows%2010+-lightgrey.svg)]()
@@ -150,7 +150,7 @@ Add the JitPack repository and the dependency to your `pom.xml`:
     <dependency>
         <groupId>com.github.andrestubbe</groupId>
         <artifactId>FastANSI</artifactId>
-        <version>v0.1.0</version>
+        <version>0.1.0</version>
     </dependency>
 </dependencies>
 ```
@@ -163,7 +163,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.andrestubbe:FastANSI:v0.1.0'
+    implementation 'com.github.andrestubbe:FastANSI:0.1.0'
 }
 ```
 
@@ -171,7 +171,7 @@ dependencies {
 
 Download the latest JAR directly to add it to your classpath:
 
-1. 📦 **[fastansi-v0.1.0.jar](https://github.com/andrestubbe/FastANSI/releases/download/v0.1.0/fastansi-0.1.0.jar)** (The Core Library)
+1. 📦 **[fastansi-0.1.0.jar](https://github.com/andrestubbe/FastANSI/releases/download/0.1.0/fastansi-0.1.0.jar)** (The Core Library)
 
 ---
 
