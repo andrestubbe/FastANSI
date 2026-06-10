@@ -20,7 +20,7 @@ garbage-collection-free and suited to run in demanding, high-throughput console-
 
 ---
 
- [**Watch the JMH Benchmark**](https://www.youtube.com/watch?v=SEEYP7PdYNk)
+[**Watch the Demo**](https://www.youtube.com/watch?v=mzIAnXfqXQs) | [**Watch the JMH Benchmark**](https://www.youtube.com/watch?v=SEEYP7PdYNk)
 
 [![FastANSI Showcase](docs/screenshot.png)](https://www.youtube.com/watch?v=mzIAnXfqXQs)
 
