@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -59,6 +59,21 @@
             <artifactId>jmh-generator-annprocess</artifactId>
             <version>1.37</version>
             <scope>test</scope>
+        </dependency>
+        <!-- JCodec — optional pure-Java MP4/H.264 decoder.
+             When present on classpath, FastAnsiImage.fromVideoFile() uses it
+             instead of requiring ffmpeg. ~3 MB, no native install needed. -->
+        <dependency>
+            <groupId>org.jcodec</groupId>
+            <artifactId>jcodec</artifactId>
+            <version>0.2.5</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.jcodec</groupId>
+            <artifactId>jcodec-javase</artifactId>
+            <version>0.2.5</version>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 

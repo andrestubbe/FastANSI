@@ -1,0 +1,26 @@
+TITLE:
+FastANSI: True-Color Video Playback inside the Windows Console (Pure Java)
+
+DESCRIPTION:
+Showcasing the raw capabilities of FastANSI, a blazing fast terminal rendering engine. What looks like a dedicated video player is actually the standard Windows Command Prompt rendering thousands of ANSI block characters per second.
+
+In this demo, the engine reads MP4 video frames via a native FFmpeg pipeline, downscales them to the terminal resolution, and translates every single pixel into high-fidelity 24-bit True-Color ANSI escape sequences (\033[38;2;R;G;Bm). 
+
+TECHNICAL HIGHLIGHTS:
+- Half-Block Rendering: Uses the standard ASCII half-block character (▄) with separate foreground and background colors to effectively double the vertical resolution of the terminal grid.
+- Native FFmpeg Pipeline: Automatically hooks into FFmpeg for zero-overhead native video decoding, bypassing slow JVM video parsers.
+- High-Speed Target-Lock: Custom loop mechanism buffers massive text strings directly into RAM, enabling perfectly paced, buttery-smooth playback (from 30 up to 60 FPS).
+- True-Color Bypass: Executes directly via the JVM to bypass standard command-line wrappers that typically strip 24-bit color sequences on Windows.
+- Interactive HUD: Native Win32 JNI hooks check for mouse hover events without blocking the playback loop, projecting a sleek, transparent overlay directly onto the video.
+
+GITHUB REPOSITORIES: 
+https://github.com/andrestubbe/FastANSI
+https://github.com/andrestubbe/FastTerminal
+https://github.com/andrestubbe/FastCore
+
+OUR PHILOSOPHY:
+No copies. Ever. Critical paths. Native-First performance.
+If you're interested in pushing the JVM to its absolute limits, subscribe for more.
+
+TAGS:
+Java, FastJava, ANSI, Command Line, Video Player, Software Engineering, True Color, Tech Demo
