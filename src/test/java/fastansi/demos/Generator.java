@@ -50,7 +50,7 @@ public class Generator {
         int maxPixels = 0;
         int validCount = 0;
 
-        for (int i = 32; i <= 65533; i++) { // Skip 65534 and 65535 (non-characters)
+        for (int i = 32; i <= 126; i++) { // Restrict to standard ASCII letters, numbers, and punctuation
             char c = (char) i;
 
             if (!font.canDisplay(c) || Character.isWhitespace(c) || Character.isISOControl(c)) {
@@ -89,14 +89,6 @@ public class Generator {
             validCount++;
         }
         
-        // Add full block explicitly if not picked up well
-        g.setColor(Color.BLACK);
-        g.fillRect(0, 0, width, height);
-        g.setColor(Color.WHITE);
-        g.drawString("█", (width - fm.charWidth('█')) / 2, (fm.getAscent() + (height - (fm.getAscent() + fm.getDescent())) / 2));
-        int fullBlockCount = countPixels(img, width, height);
-        if (fullBlockCount > maxPixels) maxPixels = fullBlockCount;
-
         g.dispose();
 
         // 2. Normalize, Deduplicate & Sort

@@ -23,10 +23,10 @@ public class RaymarchDemo {
 
     // Geometry Map (Signed Distance Field)
     static double map(Vec3 p) {
-        // Sphere floating at (0, 0, 5) with Radius 1.5
-        double dSphere = p.sub(new Vec3(0, 0, 5)).length() - 1.5;
+        // Sphere floating at (0, 0, 5) with Radius 2.625 (1.5 * 1.75)
+        double dSphere = p.sub(new Vec3(0, 0, 5)).length() - 2.625;
         // Infinite flat Wall behind the sphere at Z = 10
-        double dWall = p.z - 10.0;
+        double dWall = 10.0 - p.z;
         return Math.min(dSphere, dWall);
     }
 
@@ -63,10 +63,6 @@ public class RaymarchDemo {
         System.out.write("\033[?25l".getBytes(StandardCharsets.UTF_8)); // Hide Cursor
         
         long startTime = System.currentTimeMillis();
-        byte[] frameBuffer = new byte[width * height * 10]; // Large enough for VT sequences
-
-        // Enable VT Synchronized Output for flicker-free rendering
-        System.out.write("\033[?2026h".getBytes(StandardCharsets.UTF_8));
         
         try {
             while (true) {
@@ -74,12 +70,13 @@ public class RaymarchDemo {
                 
                 // Orbiting Spotlight (Moves left-right and up-down smoothly)
                 Vec3 lightPos = new Vec3(
-                    Math.sin(time) * 4.0, 
-                    2.0 + Math.cos(time * 0.7) * 2.0, 
-                    2.0
+                    Math.sin(time) * 5.0, 
+                    4.0 + Math.cos(time * 0.7) * 2.0, 
+                    0.0
                 );
 
                 StringBuilder sb = new StringBuilder();
+                sb.append("\033[?2026h"); // Start synchronized update
                 sb.append("\033[H"); // Reset cursor to 0,0
 
                 for (int y = 0; y < height; y++) {
@@ -102,32 +99,52 @@ public class RaymarchDemo {
                             Vec3 hitPos = ro.add(rd.mul(dist));
                             Vec3 normal = calcNormal(hitPos);
                             
+                            // Determine which object we hit (Sphere vs Wall)
+                            double distToSphere = hitPos.sub(new Vec3(0, 0, 5)).length() - 2.625;
+                            boolean hitWall = distToSphere > 0.1;
+                            
                             // Diffuse Lighting (Dot product)
                             Vec3 lightDir = lightPos.sub(hitPos).normalize();
                             double diffuse = Math.max(0.0, normal.dot(lightDir));
                             
                             // Distance Attenuation (Light falls off as it gets further)
                             double lightDist = lightPos.sub(hitPos).length();
-                            double attenuation = 1.0 / (1.0 + 0.05 * lightDist * lightDist);
-                            diffuse *= attenuation;
+                            double attenuation = 1.0 / (1.0 + 0.02 * lightDist * lightDist);
+                            diffuse *= attenuation * 2.0; // Boost light intensity
 
-                            // Cast Shadow Ray (Does a path from the surface to the light hit the sphere?)
-                            double shadowDist = rayMarch(hitPos.add(normal.mul(0.02)), lightDir, lightDist);
-                            if (shadowDist > 0 && shadowDist < lightDist) {
-                                diffuse *= 0.1; // Hard Shadow
+                            // Specular Highlight for the Sphere
+                            double specular = 0.0;
+                            if (!hitWall) {
+                                Vec3 viewDir = ro.sub(hitPos).normalize();
+                                Vec3 reflectDir = lightDir.mul(-1).add(normal.mul(2.0 * normal.dot(lightDir))).normalize();
+                                double specAngle = Math.max(0.0, viewDir.dot(reflectDir));
+                                specular = Math.pow(specAngle, 16.0) * 0.8; // Shininess
                             }
                             
-                            // Ambient light minimum
-                            double finalLighting = Math.max(0.02, diffuse);
+                            // Cast Shadow Ray
+                            double shadowDist = rayMarch(hitPos.add(normal.mul(0.02)), lightDir, lightDist);
+                            if (shadowDist > 0 && shadowDist < lightDist) {
+                                diffuse *= 0.05; // Hard Shadow (Pitch Black)
+                                specular = 0.0;
+                            }
+                            
+                            // Combine lighting
+                            double finalLighting = diffuse + specular;
                             if (finalLighting > 1.0) finalLighting = 1.0;
+                            if (finalLighting < 0.0) finalLighting = 0.0;
                             
-                            // Get mathematically accurate glyph from our core database
-                            char glyph = FastGlyphDensity.getGlyphForOpacity((float) finalLighting);
+                            // Get mathematically accurate glyph
+                            char glyph;
+                            if (finalLighting <= 0.02) glyph = ' '; // Force empty space for pure shadow
+                            else glyph = FastGlyphDensity.getGlyphForOpacity((float) finalLighting);
                             
-                            // Add some subtle terminal green glow
-                            int r = (int) (0 * finalLighting);
-                            int g = (int) (255 * finalLighting);
-                            int b = (int) (128 * finalLighting);
+                            // Assign constant base colors
+                            int r, g, b;
+                            if (hitWall) {
+                                r = 128; g = 128; b = 128; // Half Gray Wall
+                            } else {
+                                r = 255; g = 255; b = 255; // White Sphere
+                            }
                             
                             sb.append(FastANSI.fg(r, g, b)).append(glyph);
                         } else {
@@ -136,6 +153,7 @@ public class RaymarchDemo {
                     }
                     if (y < height - 1) sb.append("\n");
                 }
+                sb.append("\033[?2026l"); // Commit frame
                 
                 byte[] bytes = sb.toString().getBytes(StandardCharsets.UTF_8);
                 System.out.write(bytes);
