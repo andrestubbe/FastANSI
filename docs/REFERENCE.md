@@ -63,13 +63,14 @@ FastANSI includes zero-allocation string builders to format ANSI strings on the 
 ## 🖼️ FastAnsiImage
 High-performance Image-to-ANSI renderer included natively in the library.
 
-### `FastAnsiImage.render`
+### `FastAnsiImage.toString`
 ```java
-public static String render(BufferedImage src, int termCols, int termRows, Mode mode)
+public static String toString(BufferedImage src, int termCols, int termRows, Mode mode)
 ```
 Converts an image directly into an ANSI string with automatic aspect ratio correction for terminals.
 
 **Modes:**
+* `Mode.HALF_BLOCK`: Uses upper and lower half-block characters (`▀`) to pack 2 vertical pixels into a single terminal cell (Best quality, 2x vertical resolution).
+* `Mode.FULL_BLOCK`: Background-colored spaces (`█`) (Purest color accuracy, 1:1 pixel look).
 * `Mode.RAMP`: Luminance to density characters, with foreground color (Classic ANSI art).
-* `Mode.BLOCK`: Background-colored spaces (Purest color accuracy, pixel look).
 * `Mode.HYBRID`: Background-colored spaces overlaid with brightened foreground density characters (Maximum depth).
