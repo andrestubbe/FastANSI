@@ -15,10 +15,9 @@ FastANSI is the dedicated high-speed text processing substrate of the **FastJava
 optimized, stack-free procedural state machine designed to parse raw terminal output streams containing styles, cursor
 movements, and custom colors into structured cell representations at the physical hardware level.
 
-To achieve a completely responsive, zero-latency desktop terminal experience, FastANSI is built to pair natively with the rendering and input modules of the **FastJava** ecosystem:
+To achieve a completely responsive, zero-latency desktop terminal experience, FastANSI is built to pair natively with the rendering module of the **FastJava** ecosystem:
 
 * 🚀 **[FastTerminal](https://github.com/andrestubbe/FastTerminal)** — Direct, low-latency, hardware-accelerated 24-bit True Color terminal rendering engine.
-* 🖱️ **[FastMouse](https://github.com/andrestubbe/FastMouse)** — Precise hardware-level and virtual console-mode mouse tracking.
 
 By operating with absolutely **exactly zero object allocations** on the Java heap, FastANSI is 100%
 garbage-collection-free and suited to run in demanding, high-throughput console-composing pipelines.

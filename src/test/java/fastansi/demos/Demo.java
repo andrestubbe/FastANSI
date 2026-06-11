@@ -64,7 +64,7 @@ public class Demo {
         }
 
         // ── Alt buffer + hide cursor ─────────────────────────────────────────
-        System.out.print(FastANSI.ALT_BUFFER_ON + FastANSI.CURSOR_HIDE);
+        System.out.print(FastANSI.ALT_BUFFER_ON + FastANSI.CURSOR_HIDE + CURSOR_HOME + "\033[2J");
         System.out.flush();
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             System.out.print(FastANSI.RESET + FastANSI.CURSOR_SHOW + FastANSI.ALT_BUFFER_OFF);
@@ -97,69 +97,97 @@ public class Demo {
     // =========================================================================
 
     private static void playVideo(File file, int cols, int rows, Mode mode, boolean loopMode, boolean pingPong) throws Exception {
+        System.err.println("[FastAnsiImage] Opening: " + file.getName() +
+                           "  " + cols + "x" + rows + " " + mode + " mode" + 
+                           (pingPong ? " [PING PONG PRE-LOAD]" : (loopMode ? " [LOOP PRE-LOAD]" : "")));
+
+        // ── LOOP/PING PONG MODE (Pre-load to memory, max FPS) ─────────────────
+        if (loopMode || pingPong) {
+            java.io.File cacheFile = new java.io.File(file.getAbsolutePath() + "_" + cols + "x" + rows + "_" + mode + ".ansicache.gz");
+            java.util.List<String> frames = null;
+
+            if (cacheFile.exists()) {
+                System.out.println("Found cached frames! Bypassing ffmpeg and loading directly from disk...");
+                try (java.io.ObjectInputStream ois = new java.io.ObjectInputStream(new java.util.zip.GZIPInputStream(new java.io.FileInputStream(cacheFile)))) {
+                    frames = (java.util.List<String>) ois.readObject();
+                } catch (Exception e) {
+                    System.err.println("Failed to read cache, falling back to ffmpeg.");
+                    frames = null;
+                }
+            }
+
+            if (frames == null) {
+                if (!FastAnsiImage.ffmpegAvailable() && !FastAnsiImage.jcodecAvailable()) {
+                    System.err.println("No video backend found (neither ffmpeg nor JCodec).");
+                    System.exit(1);
+                }
+                System.out.println("Pre-loading video frames to memory... please wait.");
+                try (FastAnsiImage.FrameSource src = FastAnsiImage.fromVideoFile(file, cols, rows, mode)) {
+                    frames = FastAnsiImage.preRenderToStrings(src, cols, rows, mode);
+                }
+                
+                System.out.println("Saving " + frames.size() + " frames to compressed cache...");
+                try (java.io.ObjectOutputStream oos = new java.io.ObjectOutputStream(new java.util.zip.GZIPOutputStream(new java.io.FileOutputStream(cacheFile)))) {
+                    oos.writeObject(frames);
+                } catch (Exception e) {
+                    System.err.println("Failed to write cache: " + e.getMessage());
+                }
+            }
+
+            System.out.println("Loaded " + frames.size() + " frames. Starting " + (pingPong ? "Ping-Pong" : "Loop") + " playback!");
+            Thread.sleep(1000);
+            
+            System.out.print(FastANSI.CLEAR_SCREEN);
+            long t0 = System.nanoTime();
+            long framesPlayed = 0;
+            int idx = 0;
+            int dir = 1;
+            // Target 60 FPS for loop/pingpong
+            long frameNs = 1_000_000_000L / 60; 
+            
+            while (true) {
+                long ft = System.nanoTime();
+                
+                // Combine into single print to prevent tearing/flickering
+                // Centered FastTerminal-style HUD (permanent)
+                double liveFps = framesPlayed / ((System.nanoTime() - t0) / 1e9);
+                String line1 = " [ FastANSI True-Color ] ";
+                String line2 = String.format("  MODE: %s (%s)  ", mode, pingPong ? "PingPong" : "Loop");
+                String line3 = String.format("  %dx%d  %.1f FPS  FRAME %d  ", cols, rows, liveFps, framesPlayed);
+                
+                int centerY = rows / 2;
+                String hud = FastANSI.cursorTo(centerY - 1, (cols - line1.length()) / 2 + 1) + FastANSI.bg(245, 158, 11) + FastANSI.fg(0, 0, 0) + line1 + FastANSI.RESET
+                           + FastANSI.cursorTo(centerY,     (cols - line2.length()) / 2 + 1) + FastANSI.bg(7, 7, 15)     + FastANSI.fg(255, 255, 255) + line2 + FastANSI.RESET
+                           + FastANSI.cursorTo(centerY + 1, (cols - line3.length()) / 2 + 1) + FastANSI.bg(7, 7, 15)     + FastANSI.fg(245, 158, 11) + line3 + FastANSI.RESET;
+                
+                String syncStart = "\033[?2026h";
+                String syncEnd = "\033[?2026l";
+                String frame = syncStart + CURSOR_HOME + frames.get(idx) + hud + syncEnd;
+                System.out.write(frame.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+                System.out.flush();
+                
+                framesPlayed++;
+                
+                if (pingPong) {
+                    idx += dir;
+                    if (idx >= frames.size() - 1 || idx <= 0) dir *= -1; // Bounce
+                } else {
+                    idx++;
+                    if (idx >= frames.size()) idx = 0; // Loop forward
+                }
+                
+                long sleep = (frameNs - (System.nanoTime() - ft)) / 1_000_000;
+                if (sleep > 0) Thread.sleep(sleep);
+            }
+        }
+
+        // ── STREAMING MODE (Live decoding) ─────────────────────────────
         if (!FastAnsiImage.ffmpegAvailable() && !FastAnsiImage.jcodecAvailable()) {
             System.err.println("No video backend found (neither ffmpeg nor JCodec).");
             System.exit(1);
         }
 
-        System.err.println("[FastAnsiImage] Opening: " + file.getName() +
-                           "  " + cols + "x" + rows + " " + mode + " mode" + 
-                           (pingPong ? " [PING PONG PRE-LOAD]" : (loopMode ? " [LOOP PRE-LOAD]" : "")));
-
         try (FastAnsiImage.FrameSource src = FastAnsiImage.fromVideoFile(file, cols, rows, mode)) {
-            
-            // ── LOOP/PING PONG MODE (Pre-load to memory, max FPS) ─────────────────
-            if (loopMode || pingPong) {
-                System.out.println("Pre-loading video frames to memory... please wait.");
-                java.util.List<String> frames = FastAnsiImage.preRenderToStrings(src, cols, rows, mode);
-                System.out.println("Loaded " + frames.size() + " frames. Starting " + (pingPong ? "Ping-Pong" : "Loop") + " playback!");
-                Thread.sleep(1000);
-                
-                System.out.print(FastANSI.CLEAR_SCREEN);
-                long t0 = System.nanoTime();
-                long framesPlayed = 0;
-                int idx = 0;
-                int dir = 1;
-                // Target 60 FPS for loop/pingpong
-                long frameNs = 1_000_000_000L / 60; 
-                
-                while (true) {
-                    long ft = System.nanoTime();
-                    
-                    // Combine into single print to prevent tearing/flickering
-                    // Centered FastTerminal-style HUD (permanent)
-                    double liveFps = framesPlayed / ((System.nanoTime() - t0) / 1e9);
-                    String line1 = " [ FastANSI True-Color ] ";
-                    String line2 = String.format("  MODE: %s (%s)  ", mode, pingPong ? "PingPong" : "Loop");
-                    String line3 = String.format("  %dx%d  %.1f FPS  FRAME %d  ", cols, rows, liveFps, framesPlayed);
-                    
-                    int centerY = rows / 2;
-                    String hud = FastANSI.cursorTo(centerY - 1, (cols - line1.length()) / 2 + 1) + FastANSI.bg(245, 158, 11) + FastANSI.fg(0, 0, 0) + line1 + FastANSI.RESET
-                               + FastANSI.cursorTo(centerY,     (cols - line2.length()) / 2 + 1) + FastANSI.bg(7, 7, 15)     + FastANSI.fg(255, 255, 255) + line2 + FastANSI.RESET
-                               + FastANSI.cursorTo(centerY + 1, (cols - line3.length()) / 2 + 1) + FastANSI.bg(7, 7, 15)     + FastANSI.fg(245, 158, 11) + line3 + FastANSI.RESET;
-                    
-                    String syncStart = "\033[?2026h";
-                    String syncEnd = "\033[?2026l";
-                    String frame = syncStart + CURSOR_HOME + frames.get(idx) + hud + syncEnd;
-                    System.out.write(frame.getBytes(java.nio.charset.StandardCharsets.UTF_8));
-                    System.out.flush();
-                    
-                    framesPlayed++;
-                    
-                    if (pingPong) {
-                        idx += dir;
-                        if (idx >= frames.size() - 1 || idx <= 0) dir *= -1; // Bounce
-                    } else {
-                        idx++;
-                        if (idx >= frames.size()) idx = 0; // Loop forward
-                    }
-                    
-                    long sleep = (frameNs - (System.nanoTime() - ft)) / 1_000_000;
-                    if (sleep > 0) Thread.sleep(sleep);
-                }
-            }
-
-            // ── STREAMING MODE (Live decoding) ─────────────────────────────
             long   frameCount = 0;
             long   t0         = System.nanoTime();
             double fps        = src.getFps();
