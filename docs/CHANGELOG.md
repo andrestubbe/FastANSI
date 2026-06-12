@@ -1,5 +1,9 @@
 # ⚡ FastANSI Changelog
 
+## v0.1.1 [ALPHA] - FastASCII Integration
+- **FastASCII Integration**: Adopted `FastASCII` 0.1.0 as the core integer and glyph density dependency.
+- **Glyph Density Extracted**: Extracted `FastGlyphDensity` and moved it into the core `FastASCII` library for ecosystem-wide availability.
+
 ## v0.1.0 [ALPHA] - Initial Release
 - **Zero-Allocation Parser Kernel**: High-performance stack-free procedural loop.
 - **Full 24-bit True Color Parsing**: Accurate resolution of advanced foreground and background RGB sequences.
