@@ -115,6 +115,17 @@ public class FastANSI {
      * Implementing classes can process telemetry state natively with zero GC impact.
      */
     public interface ANSIListener {
+        // Default byte array methods for native parsing (zero-allocation implementations should override these)
+        default void onText(byte[] text, int offset, int length) {
+            onText(new String(text, offset, length, java.nio.charset.StandardCharsets.UTF_8), 0, length);
+        }
+        default void onWindowTitle(byte[] title, int offset, int length) {
+            onWindowTitle(new String(title, offset, length, java.nio.charset.StandardCharsets.UTF_8), 0, length);
+        }
+        default void onUnsupportedSequence(byte[] raw, int offset, int length) {
+            onUnsupportedSequence(new String(raw, offset, length, java.nio.charset.StandardCharsets.UTF_8), 0, length);
+        }
+
         // Plain Text Blocks
         void onText(CharSequence text, int start, int end);
 
@@ -367,6 +378,212 @@ public class FastANSI {
         // Flush any remaining trailing text
         if (i > textStart) {
             listener.onText(input, textStart, i);
+        }
+    }
+
+    /**
+     * Zero-allocation, native byte array parser.
+     */
+    public static void parse(byte[] input, int offset, int length, ANSIListener listener) {
+        if (input == null || listener == null) return;
+
+        int len = offset + length;
+        int textStart = offset;
+        int i = offset;
+
+        // Buffer array to hold parsed numerical parameters in CSI sequences (up to 16 parameters)
+        int[] params = new int[16];
+        int paramCount = 0;
+
+        while (i < len) {
+            byte c = input[i];
+
+            // Detect Escape character (\033 or \u001B)
+            if (c == 27) {
+                // If we accumulated normal text, flush it now
+                if (i > textStart) {
+                    listener.onText(input, textStart, i - textStart);
+                }
+
+                // Move past ESC
+                i++;
+                if (i >= len) {
+                    textStart = len;
+                    break;
+                }
+
+                byte next = input[i];
+
+                // 1. CSI - Control Sequence Introducer: ESC [
+                if (next == '[') {
+                    i++; // Move past '['
+                    
+                    boolean isPrivate = false;
+                    if (i < len && input[i] == '?') {
+                        isPrivate = true;
+                        i++;
+                    }
+
+                    // Reset parameters
+                    paramCount = 0;
+                    int currentParam = -1;
+
+                    // Parse numerical parameters
+                    int seqStart = i;
+                    while (i < len) {
+                        byte seqChar = input[i];
+
+                        if (seqChar >= '0' && seqChar <= '9') {
+                            if (currentParam == -1) {
+                                currentParam = 0;
+                            }
+                            currentParam = currentParam * 10 + (seqChar - '0');
+                            i++;
+                        } else if (seqChar == ';') {
+                            params[paramCount++] = (currentParam == -1) ? 0 : currentParam;
+                            currentParam = -1;
+                            if (paramCount >= params.length) break; // Overflow protection
+                            i++;
+                        } else {
+                            // Non-numeric, non-separator character indicates the end of CSI sequence
+                            if (currentParam != -1) {
+                                params[paramCount++] = currentParam;
+                            }
+                            break;
+                        }
+                    }
+
+                    if (i < len) {
+                        byte cmd = input[i];
+                        i++; // Consume command character
+
+                        if (isPrivate) {
+                            // Private modes (e.g. ?25h, ?1049h, ?1049l)
+                            int mode = (paramCount > 0) ? params[0] : 0;
+                            if (cmd == 'h') {
+                                listener.onPrivateMode(mode, true);
+                            } else if (cmd == 'l') {
+                                listener.onPrivateMode(mode, false);
+                            } else {
+                                listener.onUnsupportedSequence(input, seqStart - 3, i - (seqStart - 3));
+                            }
+                        } else {
+                            // Standard CSI Commands
+                            switch (cmd) {
+                                case 'm': // SGR (Select Graphic Rendition) - Colors & Styles
+                                    if (paramCount == 0) {
+                                        listener.onReset();
+                                    } else {
+                                        parseSGR(params, paramCount, listener);
+                                    }
+                                    break;
+                                case 'H': // Cup - Cursor Position
+                                case 'f':
+                                    int row = (paramCount > 0) ? params[0] : 1;
+                                    int col = (paramCount > 1) ? params[1] : 1;
+                                    listener.onCursorPosition(row, col);
+                                    break;
+                                case 'A': // CUU - Cursor Up
+                                    listener.onCursorUp((paramCount > 0) ? params[0] : 1);
+                                    break;
+                                case 'B': // CUD - Cursor Down
+                                    listener.onCursorDown((paramCount > 0) ? params[0] : 1);
+                                    break;
+                                case 'C': // CUF - Cursor Forward
+                                    listener.onCursorForward((paramCount > 0) ? params[0] : 1);
+                                    break;
+                                case 'D': // CUB - Cursor Backward
+                                    listener.onCursorBackward((paramCount > 0) ? params[0] : 1);
+                                    break;
+                                case 'E': // CNL - Cursor Next Line
+                                    listener.onCursorNextLine((paramCount > 0) ? params[0] : 1);
+                                    break;
+                                case 'F': // CPL - Cursor Preceding Line
+                                    listener.onCursorPrevLine((paramCount > 0) ? params[0] : 1);
+                                    break;
+                                case 'G': // CHA - Cursor Horizontal Absolute
+                                    listener.onCursorHorizontalAbsolute((paramCount > 0) ? params[0] : 1);
+                                    break;
+                                case 'J': // ED - Erase in Display
+                                    listener.onEraseInDisplay((paramCount > 0) ? params[0] : 0);
+                                    break;
+                                case 'K': // EL - Erase in Line
+                                    listener.onEraseInLine((paramCount > 0) ? params[0] : 0);
+                                    break;
+                                case 'S': // SU - Scroll Up
+                                    listener.onScrollUp((paramCount > 0) ? params[0] : 1);
+                                    break;
+                                case 'T': // SD - Scroll Down
+                                    listener.onScrollDown((paramCount > 0) ? params[0] : 1);
+                                    break;
+                                case 'n': // DSR - Device Status Report
+                                    if (paramCount > 0 && params[0] == 6) {
+                                        listener.onDeviceStatusReport();
+                                    } else {
+                                        listener.onUnsupportedSequence(input, seqStart - 2, i - (seqStart - 2));
+                                    }
+                                    break;
+                                default:
+                                    listener.onUnsupportedSequence(input, seqStart - 2, i - (seqStart - 2));
+                                    break;
+                            }
+                        }
+                    }
+                    textStart = i;
+                }
+                // 2. OSC - Operating System Command: ESC ] (e.g., Set Window Title)
+                else if (next == ']') {
+                    i++; // Move past ']'
+                    int oscStart = i;
+
+                    // Read until BEL (\u0007) or ST (ESC \)
+                    int contentEnd = -1;
+                    while (i < len) {
+                        byte oscChar = input[i];
+                        if (oscChar == 7) { // BEL
+                            contentEnd = i;
+                            i++;
+                            break;
+                        } else if (oscChar == 27 && i + 1 < len && input[i + 1] == '\\') { // ESC \ (ST)
+                            contentEnd = i;
+                            i += 2;
+                            break;
+                        }
+                        i++;
+                    }
+
+                    if (contentEnd != -1) {
+                        // Check if it sets window title (starts with '0;' or '2;')
+                        if (contentEnd - oscStart >= 2 && 
+                            (input[oscStart] == '0' || input[oscStart] == '2') && 
+                            input[oscStart + 1] == ';') {
+                            listener.onWindowTitle(input, oscStart + 2, contentEnd - (oscStart + 2));
+                        } else {
+                            listener.onUnsupportedSequence(input, oscStart - 2, i - (oscStart - 2));
+                        }
+                    }
+                    textStart = i;
+                }
+                // 3. Fallback for standalone single-char ESC controls (like ESC M scroll backward, ESC D scroll forward)
+                else {
+                    if (next == 'M') {
+                        listener.onScrollDown(1);
+                    } else if (next == 'D') {
+                        listener.onScrollUp(1);
+                    } else {
+                        listener.onUnsupportedSequence(input, i - 1, (i + 1) - (i - 1));
+                    }
+                    i++;
+                    textStart = i;
+                }
+            } else {
+                i++;
+            }
+        }
+
+        // Flush any remaining trailing text
+        if (i > textStart) {
+            listener.onText(input, textStart, i - textStart);
         }
     }
 

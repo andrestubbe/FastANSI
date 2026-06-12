@@ -200,4 +200,21 @@ public class FastANSITest {
         assertEquals("CURSOR_POS:10,20", listener.events.get(0));
         assertEquals("CURSOR_UP:1", listener.events.get(1));
     }
+
+    @Test
+    public void testByteArrayNativeParsing() {
+        TestListener listener = new TestListener();
+        String seq = "Hello\033[38;2;255;120;0mOrange Text\033[0m\033[?1049h\033[10;20H";
+        byte[] bytes = seq.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+        
+        FastANSI.parse(bytes, 0, bytes.length, listener);
+
+        assertEquals(6, listener.events.size());
+        assertEquals("TEXT:Hello", listener.events.get(0));
+        assertEquals("FG:2,255,120,0", listener.events.get(1));
+        assertEquals("TEXT:Orange Text", listener.events.get(2));
+        assertEquals("RESET", listener.events.get(3));
+        assertEquals("PRIVATE:1049,true", listener.events.get(4));
+        assertEquals("CURSOR_POS:10,20", listener.events.get(5));
+    }
 }
