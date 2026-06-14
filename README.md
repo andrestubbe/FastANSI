@@ -1,4 +1,4 @@
-# FastANSI 0.1.1 [ALPHA-2026-06] — High-Performance ANSI & VT Escape Sequence Parser for Java
+# FastANSI 0.1.1 [ALPHA-2026-05-18] — High-Performance ANSI & VT Escape Sequence Parser for Java
 
 [![Status](https://img.shields.io/badge/status-0.1.1-brightgreen.svg)](https://github.com/andrestubbe/FastANSI/releases/tag/0.1.1)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
