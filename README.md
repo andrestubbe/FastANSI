@@ -186,7 +186,6 @@ FastANSI includes several executable scripts to demonstrate its high-speed TrueC
 | Case                       | Execution Command    | Performance / Demo                         | Details                                                                                                          |
 |----------------------------|----------------------|--------------------------------------------|------------------------------------------------------------------------------------------------------------------|
 | Terminal Video Player      | `run-demo.bat`       | High-speed 60 FPS video and image playback | Uses `ffmpeg` to pre-load videos into ANSI strings, demonstrating TrueColor `HALF_BLOCK` resolution rendering. |
-| 3D Raymarch Animation      | `run-raymarch.bat`   | Real-time procedural 3D math rendering     | Calculates a mathematical 3D Raymarching scene entirely in Java, projecting it to the terminal via ANSI escapes. |
 | CLI Video to ANSI Converter| `run-converter.bat`  | Headless terminal conversion toolkit       | A CLI utility to export images and videos to self-playing `.sh`/`.bat` scripts or raw `.ansi` text files.       |
 
 ## Documentation
