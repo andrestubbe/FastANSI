@@ -1,6 +1,6 @@
-# FastANSI 0.1.1 [ALPHA-2026-05-18] — High-Performance ANSI & VT Escape Sequence Parser for Java
+# FastANSI 0.1.2 — High-Performance ANSI & VT Escape Sequence Parser for Java
 
-[![Status](https://img.shields.io/badge/status-0.1.1-brightgreen.svg)](https://github.com/andrestubbe/FastANSI/releases/tag/0.1.1)
+[![Status](https://img.shields.io/badge/status-0.1.2-brightgreen.svg)](https://github.com/andrestubbe/FastANSI/releases/tag/v0.1.2)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Java](https://img.shields.io/badge/Java-17+-blue.svg)](https://www.java.com)
 [![Platform](https://img.shields.io/badge/Platform-Windows%2010+-lightgrey.svg)]()
@@ -102,6 +102,7 @@ public class Demo {
   absolute, display/line erasing).
 * **📺 Private & OSC Operating Modes** — Detects alternate screen buffers (`?1049h`/`l`), cursor display toggles (`?25h`/
   `l`), and window title adjustments via Operating System Commands (OSC).
+* **🖼️ Native 1:1 SIXEL Graphics** — Integrated SIXEL protocol encoder (`FastAnsiImage.Mode.SIXEL`, `toSixel()`, `writeSixel()`) for native 1:1 screen pixel rendering in modern terminals.
 
 ---
 
@@ -129,6 +130,7 @@ FastANSI is rigorously profiled using **JMH** to guarantee zero overhead.
 | `fg(r, g, b)` / `fg(idx)`| Generates 24-bit TrueColor or 8-bit index foreground ANSI escape sequences.            | `FastANSI.java`                   |
 | `bg(r, g, b)` / `bg(idx)`| Generates 24-bit TrueColor or 8-bit index background ANSI escape sequences.            | `FastANSI.java`                   |
 | `cursorTo(row, col)`     | Generates cursor absolute positioning escape codes.                                    | `FastANSI.java`                   |
+| `FastAnsiImage.toSixel`  | Encodes a `BufferedImage` into a 1:1 native SIXEL pixel escape sequence string.        | `FastAnsiImage.java`              |
 
 > [!TIP]
 > See **[REFERENCE.md](docs/REFERENCE.md)** for complete callback listings, SGR color codes, and parsed parameters.
@@ -154,7 +156,7 @@ Add the JitPack repository and the dependency to your `pom.xml`:
     <dependency>
         <groupId>com.github.andrestubbe</groupId>
         <artifactId>FastANSI</artifactId>
-        <version>0.1.1</version>
+        <version>0.1.2</version>
     </dependency>
 </dependencies>
 ```
@@ -167,7 +169,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.andrestubbe:FastANSI:0.1.0'
+    implementation 'com.github.andrestubbe:FastANSI:0.1.2'
 }
 ```
 
@@ -175,21 +177,44 @@ dependencies {
 
 Download the latest JAR directly to add it to your classpath:
 
-1. 📦 **[fastansi-0.1.1.jar](https://github.com/andrestubbe/FastANSI/releases/download/0.1.1/fastansi-0.1.1.jar)** (The Core Library)
+1. 📦 **[fastansi-0.1.2.jar](https://github.com/andrestubbe/FastANSI/releases/download/v0.1.2/fastansi-0.1.2.jar)** (The Core Library)
 
 ---
 
 ## Technical Examples & Demos
 
-FastANSI includes several executable scripts to demonstrate its high-speed TrueColor and formatting capabilities:
+FastANSI includes executable scripts and code patterns to demonstrate its high-speed TrueColor and formatting capabilities:
 
 | Case                       | Execution Command    | Performance / Demo                         | Details                                                                                                          |
 |----------------------------|----------------------|--------------------------------------------|------------------------------------------------------------------------------------------------------------------|
+| Native 1:1 SIXEL Pixels    | `run-sixel.bat`      | True 1:1 screen pixel rendering            | Demonstrates native SIXEL 1:1 pixel rendering with square aspect ratio and 6x6x6 TrueColor quantization.         |
 | Terminal Video Player      | `run-demo.bat`       | High-speed 60 FPS video and image playback | Uses `ffmpeg` to pre-load videos into ANSI strings, demonstrating TrueColor `HALF_BLOCK` resolution rendering. |
 | CLI Video to ANSI Converter| `run-converter.bat`  | Headless terminal conversion toolkit       | A CLI utility to export images and videos to self-playing `.sh`/`.bat` scripts or raw `.ansi` text files.       |
 
+### Native 1:1 SIXEL Image Rendering Example
+
+```java
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import fastansi.FastAnsiImage;
+
+public class SixelDemo {
+    public static void main(String[] args) throws Exception {
+        BufferedImage img = ImageIO.read(new File("image.png"));
+
+        // Output image to stdout as a native 1:1 SIXEL pixel stream
+        FastAnsiImage.writeSixel(img, System.out);
+
+        // Or convert to a raw SIXEL escape sequence string
+        String sixelString = FastAnsiImage.toSixel(img);
+    }
+}
+```
+
 ## Documentation
 
+* **[SIXEL.md](docs/SIXEL.md)**: SIXEL 1:1 native pixel graphics guide and protocol specification.
 * **[REFERENCE.md](docs/REFERENCE.md)**: Exhaustive catalog of SGR styles, OSC window parameters, and callback contracts.
 * **[PHILOSOPHY.md](docs/PHILOSOPHY.md)**: Zero-allocation and low-overhead processing designs.
 * **[ROADMAP.md](docs/ROADMAP.md)**: Planned milestone features and performance extensions.

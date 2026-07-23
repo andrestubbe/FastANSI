@@ -74,3 +74,11 @@ Converts an image directly into an ANSI string with automatic aspect ratio corre
 * `Mode.FULL_BLOCK`: Background-colored spaces (`█`) (Purest color accuracy, 1:1 pixel look).
 * `Mode.RAMP`: Luminance to density characters, with foreground color (Classic ANSI art).
 * `Mode.HYBRID`: Background-colored spaces overlaid with brightened foreground density characters (Maximum depth).
+
+---
+
+## 🖼️ Native 1:1 SIXEL Integration
+For true 1:1 screen pixel rendering without character cell block approximations:
+* **[SIXEL Protocol Guide](file:///c:/Users/andre/Documents/2026-06-14-Work-FastJava/FastANSI/docs/SIXEL.md)**: Details on SIXEL encoding, 1:1 pixel stream generation, and terminal compatibility.
+* **[Sixel1To1PixelDemo.java](file:///c:/Users/andre/Documents/2026-06-14-Work-FastJava/FastANSI/src/test/java/fastansi/demos/Sixel1To1PixelDemo.java)**: Standalone 1:1 SIXEL pixel rendering demo.
+

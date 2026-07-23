@@ -38,7 +38,7 @@ import javax.imageio.stream.ImageInputStream;
 public final class FastAnsiImage {
 
     // ── Mode ─────────────────────────────────────────────────────────────────
-    public enum Mode { HALF_BLOCK, FULL_BLOCK, RAMP, HYBRID }
+    public enum Mode { HALF_BLOCK, FULL_BLOCK, RAMP, HYBRID, SIXEL }
 
     /** Luminance ramp (darkest → brightest). */
     private static final char[] RAMP_CHARS = " .,:;i1tfLCG08@█".toCharArray();
@@ -75,6 +75,9 @@ public final class FastAnsiImage {
      * Render a BufferedImage as an ANSI-coloured string ready to print to stdout.
      */
     public static String toString(BufferedImage src, int cols, int rows, Mode mode) {
+        if (mode == Mode.SIXEL) {
+            return toSixel(scale(src, cols, rows * 2));
+        }
         BufferedImage scaled = scale(src, cols, pixelH(rows, mode));
         StringBuilder sb = new StringBuilder(cols * rows * 30);
         for (int row = 0; row < rows; row++) {
@@ -84,6 +87,108 @@ public final class FastAnsiImage {
             if (row < rows - 1) sb.append('\n');
         }
         return sb.toString();
+    }
+
+    /**
+     * Converts a BufferedImage into a SIXEL 1:1 pixel escape sequence string.
+     */
+    public static String toSixel(BufferedImage img) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
+            writeSixel(img, baos);
+            return baos.toString("ISO-8859-1");
+        } catch (IOException e) {
+            return "";
+        }
+    }
+
+    /**
+     * Writes a BufferedImage directly to an OutputStream as a SIXEL pixel stream.
+     */
+    public static void writeSixel(BufferedImage img, OutputStream out) throws IOException {
+        int width = img.getWidth();
+        int height = img.getHeight();
+
+        StringBuilder sb = new StringBuilder(width * height * 3);
+
+        // SIXEL Header: 1:1 Aspect Ratio (7) + Raster Attributes ("1;1;w;h)
+        sb.append("\033P7;1;7q");
+        sb.append(String.format("\"1;1;%d;%d", width, height));
+
+        // 6x6x6 Color Cube Palette (216 colors)
+        for (int i = 0; i < 216; i++) {
+            int r = (i / 36) * 51;
+            int g = ((i / 6) % 6) * 51;
+            int b = (i % 6) * 51;
+            int rPct = (int) Math.round((r / 255.0) * 100.0);
+            int gPct = (int) Math.round((g / 255.0) * 100.0);
+            int bPct = (int) Math.round((b / 255.0) * 100.0);
+            sb.append(String.format("#%d;2;%d;%d;%d", i, rPct, gPct, bPct));
+        }
+
+        // Render 6-pixel vertical bands
+        for (int yBand = 0; yBand < height; yBand += 6) {
+            java.util.Set<Integer> colorsInBand = new java.util.HashSet<>();
+            int[][] bandPixels = new int[6][width];
+
+            for (int dy = 0; dy < 6; dy++) {
+                int y = yBand + dy;
+                for (int x = 0; x < width; x++) {
+                    if (y < height) {
+                        int rgb = img.getRGB(x, y);
+                        int r = (rgb >> 16) & 0xFF;
+                        int g = (rgb >> 8) & 0xFF;
+                        int b = rgb & 0xFF;
+
+                        int rIdx = Math.min(5, (r + 25) / 51);
+                        int gIdx = Math.min(5, (g + 25) / 51);
+                        int bIdx = Math.min(5, (b + 25) / 51);
+                        int colorIdx = rIdx * 36 + gIdx * 6 + bIdx;
+
+                        bandPixels[dy][x] = colorIdx;
+                        colorsInBand.add(colorIdx);
+                    } else {
+                        bandPixels[dy][x] = -1;
+                    }
+                }
+            }
+
+            for (int colorIdx : colorsInBand) {
+                sb.append(String.format("#%d", colorIdx));
+                int repeatCount = 0;
+                char lastSixelChar = 0;
+
+                for (int x = 0; x < width; x++) {
+                    int sixelBits = 0;
+                    for (int dy = 0; dy < 6; dy++) {
+                        if (bandPixels[dy][x] == colorIdx) {
+                            sixelBits |= (1 << dy);
+                        }
+                    }
+                    char sixelChar = (char) (63 + sixelBits);
+                    if (x > 0 && sixelChar == lastSixelChar) {
+                        repeatCount++;
+                    } else {
+                        if (repeatCount > 0) {
+                            if (repeatCount > 3) sb.append("!").append(repeatCount).append(lastSixelChar);
+                            else for (int k = 0; k < repeatCount; k++) sb.append(lastSixelChar);
+                        }
+                        lastSixelChar = sixelChar;
+                        repeatCount = 1;
+                    }
+                }
+                if (repeatCount > 0) {
+                    if (repeatCount > 3) sb.append("!").append(repeatCount).append(lastSixelChar);
+                    else for (int k = 0; k < repeatCount; k++) sb.append(lastSixelChar);
+                }
+                sb.append("$");
+            }
+            sb.append("-");
+        }
+        sb.append("\033\\");
+
+        out.write(sb.toString().getBytes("ISO-8859-1"));
+        out.flush();
     }
 
     // =========================================================================
