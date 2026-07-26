@@ -533,7 +533,7 @@ public final class FastAnsiImage {
         return (mode == Mode.HALF_BLOCK) ? rows * 2 : rows;
     }
 
-    private static BufferedImage scale(BufferedImage src, int w, int h) {
+    public static BufferedImage scale(BufferedImage src, int w, int h) {
         BufferedImage out = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = out.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
