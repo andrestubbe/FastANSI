@@ -30,29 +30,6 @@ garbage-collection-free and suited to run in demanding, high-throughput console-
 
 ---
 
-## Table of Contents
-
-- [Why FastANSI?](#why-fastansi)
-- [Key Features](#key-features)
-- [Performance](#performance)
-- [API Quick Reference](#api-quick-reference)
-- [Installation](#installation)
-- [Documentation](#documentation)
-- [Platform Support](#platform-support)
-- [Related Projects](#related-projects)
-- [License](#license)
-
----
-
-## Why FastANSI?
-
-The mission is to establish the fastest, most comprehensive escape sequence parser in the JVM universe. FastANSI enables
-terminal viewports to consume raw external ANSI dumps dynamically, process global terminal styling, and support custom
-24-bit True Color rendering with zero garbage collection overhead.
-
----
-
-
 ## Quick Start
 
 ```java
@@ -90,6 +67,32 @@ public class Demo {
 ```
 
 ---
+
+---
+
+## Table of Contents
+
+- [Why FastANSI?](#why-fastansi)
+- [Key Features](#key-features)
+- [Performance](#performance)
+- [API Quick Reference](#api-quick-reference)
+- [Installation](#installation)
+- [Documentation](#documentation)
+- [Platform Support](#platform-support)
+- [Related Projects](#related-projects)
+- [License](#license)
+
+---
+
+## Why FastANSI?
+
+The mission is to establish the fastest, most comprehensive escape sequence parser in the JVM universe. FastANSI enables
+terminal viewports to consume raw external ANSI dumps dynamically, process global terminal styling, and support custom
+24-bit True Color rendering with zero garbage collection overhead.
+
+---
+
+
 
 ## Key Features
 
