@@ -74,6 +74,7 @@ public class Demo {
 
 - [Why FastANSI?](#why-fastansi)
 - [Key Features](#key-features)
+- [Real-World Use Cases](#real-world-use-cases)
 - [Performance](#performance)
 - [API Quick Reference](#api-quick-reference)
 - [Installation](#installation)
@@ -106,6 +107,17 @@ terminal viewports to consume raw external ANSI dumps dynamically, process globa
 * **📺 Private & OSC Operating Modes** — Detects alternate screen buffers (`?1049h`/`l`), cursor display toggles (`?25h`/
   `l`), and window title adjustments via Operating System Commands (OSC).
 * **🖼️ Native 1:1 SIXEL Graphics** — Integrated SIXEL protocol encoder (`FastAnsiImage.Mode.SIXEL`, `toSixel()`, `writeSixel()`) for native 1:1 screen pixel rendering in modern terminals.
+
+---
+
+## Real-World Use Cases
+
+- 🖥️ **Terminal Rendering**: Power 60+ FPS zero-latency ANSI rendering in [FastTerminal](https://github.com/andrestubbe/FastTerminal) without JVM Garbage Collection stalls.
+- 📋 **Log Processing**: Parse and display ANSI-styled server logs, CI/CD outputs, and terminal sessions with proper formatting preserved.
+- 🎮 **TUI Applications**: Enable rich terminal user interfaces with proper escape sequence handling for complex layouts and interactive elements.
+- 🔌 **Terminal Emulators**: Parse external ANSI output from legacy applications, SSH sessions, and remote systems for accurate display.
+- 📊 **Data Visualization**: Render colored charts, progress bars, and status indicators in terminal dashboards with proper ANSI formatting.
+- 🌐 **Remote Shell Sessions**: Handle ANSI escape codes from remote connections, preserving formatting and cursor positioning from distant systems.
 
 ---
 
