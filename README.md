@@ -30,24 +30,24 @@ garbage-collection-free and suited to run in demanding, high-throughput console-
 
 ---
 
-## Quick Start
+## Quick Start — Example
 
 ```java
 import fastansi.FastANSI;
 
-public class Demo {
+public class TerminalFormattingDemo {
     public static void main(String[] args) {
-        String ansiStream = "Hello \033[1;31mRed Bold\033[0m Text!";
+        // 1. Generate ANSI escape sequences for formatting
+        String redBoldText = FastANSI.fg(255, 100, 100) + FastANSI.bold() + "Error!" + FastANSI.reset();
+        String greenText = FastANSI.fg(100, 255, 100) + "Success" + FastANSI.reset();
+        String cursorToStart = FastANSI.cursorTo(1, 1); // Move to top-left
 
-        FastANSI.parse(ansiStream, new FastANSI.ANSIListener() {
+        // 2. Parse existing ANSI streams
+        String ansiInput = "\033[1;31mBold Red\033[0m Normal Text";
+        FastANSI.parse(ansiInput, new FastANSI.ANSIListener() {
             @Override
             public void onText(CharSequence text, int start, int end) {
                 System.out.println("Text: " + text.subSequence(start, end));
-            }
-
-            @Override
-            public void onReset() {
-                System.out.println("Reset Styles");
             }
 
             @Override
@@ -57,11 +57,17 @@ public class Demo {
 
             @Override
             public void onForegroundColor(int colorType, int r, int g, int b) {
-                System.out.println("FG Color - Type: " + colorType + ", R:" + r);
+                System.out.println("Color: RGB(" + r + "," + g + "," + b + ")");
             }
 
-            // ... Implement other low-overhead cursor & mode callbacks
+            // Implement other callbacks as needed
+            @Override
+            public void onReset() { System.out.println("Reset"); }
         });
+
+        // 3. Strip ANSI codes from strings
+        String cleanText = FastANSI.strip(ansiInput);
+        System.out.println("Clean: " + cleanText); // "Bold Red Normal Text"
     }
 }
 ```
