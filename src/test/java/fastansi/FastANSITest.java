@@ -217,4 +217,11 @@ public class FastANSITest {
         assertEquals("PRIVATE:1049,true", listener.events.get(4));
         assertEquals("CURSOR_POS:10,20", listener.events.get(5));
     }
+
+    @Test
+    public void testArgbGenerators() {
+        int color = 0xFFFF7800; // Alpha 255, R 255, G 120, B 0
+        assertEquals("\033[38;2;255;120;0m", FastANSI.fgArgb(color));
+        assertEquals("\033[48;2;255;120;0m", FastANSI.bgArgb(color));
+    }
 }

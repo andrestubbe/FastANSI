@@ -105,6 +105,16 @@ public class FastANSI {
         return CSI + FastSGR.BG_EXT + ";" + FastSGR.EXT_8BIT + ";" + index + "m";
     }
 
+    /** Generates a 24-bit true color foreground escape code from packed ARGB/RGB int. */
+    public static String fgArgb(int argb) {
+        return fg((argb >>> 16) & 0xFF, (argb >>> 8) & 0xFF, argb & 0xFF);
+    }
+
+    /** Generates a 24-bit true color background escape code from packed ARGB/RGB int. */
+    public static String bgArgb(int argb) {
+        return bg((argb >>> 16) & 0xFF, (argb >>> 8) & 0xFF, argb & 0xFF);
+    }
+
     /** Generates a cursor positioning escape code. */
     public static String cursorTo(int row, int col) {
         return CSI + row + ";" + col + "H";
