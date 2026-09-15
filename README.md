@@ -79,15 +79,17 @@ public class TerminalFormattingDemo {
 ## Table of Contents
 
 - [Why FastANSI?](#why-fastansi)
+- [Quick Start](#quick-start)
 - [Key Features](#key-features)
 - [Real-World Use Cases](#real-world-use-cases)
-- [Performance](#performance)
+- [Performance Benchmarks](#performance-benchmarks)
 - [API Quick Reference](#api-quick-reference)
+- [Technical Demos & Benchmarks](#technical-demos--benchmarks)
 - [Installation](#installation)
 - [Documentation](#documentation)
 - [Platform Support](#platform-support)
-- [Related Projects](#related-projects)
 - [License](#license)
+- [Related Projects](#related-projects)
 
 ---
 
@@ -127,7 +129,7 @@ terminal viewports to consume raw external ANSI dumps dynamically, process globa
 
 ---
 
-## Performance
+## Performance Benchmarks
 
 FastANSI is rigorously profiled using **JMH** to guarantee zero overhead.
 [**Watch the JMH Benchmark**](https://www.youtube.com/watch?v=SEEYP7PdYNk)
@@ -145,16 +147,28 @@ FastANSI is rigorously profiled using **JMH** to guarantee zero overhead.
 
 ## API Quick Reference
 
-| Method                   | Description                                                                            | Path                              |
-|--------------------------|----------------------------------------------------------------------------------------|-----------------------------------|
-| `parse(input, listener)` | Parses a text stream procedurally, triggering corresponding callbacks on the listener. | [Reference →](docs/REFERENCE.md#parse) |
-| `fg(r, g, b)` / `fg(idx)`| Generates 24-bit TrueColor or 8-bit index foreground ANSI escape sequences.            | `FastANSI.java`                   |
-| `bg(r, g, b)` / `bg(idx)`| Generates 24-bit TrueColor or 8-bit index background ANSI escape sequences.            | `FastANSI.java`                   |
-| `cursorTo(row, col)`     | Generates cursor absolute positioning escape codes.                                    | `FastANSI.java`                   |
-| `FastAnsiImage.toSixel`  | Encodes a `BufferedImage` into a 1:1 native SIXEL pixel escape sequence string.        | `FastAnsiImage.java`              |
+| Method | Return Type | Description | Docs |
+|---|---|---|---|
+| `FastANSI.parse(input, listener)` | `void` | Parses a text stream procedurally, triggering callbacks on the listener. | [Reference](docs/REFERENCE.md#fastansiparse) |
+| `FastANSI.fg(r, g, b)` / `fg(idx)` | `String` | Generates 24-bit TrueColor or 8-bit indexed foreground ANSI escape sequences. | [Reference](docs/REFERENCE.md#color-generators) |
+| `FastANSI.bg(r, g, b)` / `bg(idx)` | `String` | Generates 24-bit TrueColor or 8-bit indexed background ANSI escape sequences. | [Reference](docs/REFERENCE.md#color-generators) |
+| `FastANSI.cursorTo(row, col)` | `String` | Generates cursor absolute positioning escape codes (`\033[row;colH`). | [Reference](docs/REFERENCE.md#cursor--display-controls) |
+| `FastANSI.strip(input)` | `String` | High-speed, zero-allocation stripping of all ANSI escape sequences from text. | [Reference](docs/REFERENCE.md#core-api) |
+| `FastAnsiImage.toString(src, cols, rows, mode)` | `String` | Converts `BufferedImage` to ANSI string with automatic aspect ratio handling. | [Reference](docs/REFERENCE.md#fastansiimagetostring) |
+| `FastAnsiImage.toSixel(img)` | `String` | Encodes a `BufferedImage` into a 1:1 native SIXEL pixel escape sequence string. | [Reference](docs/REFERENCE.md#native-11-sixel-integration) |
+| `FastAnsiImage.writeSixel(img, out)` | `void` | Streams 1:1 square-pixel SIXEL bytes directly into stdout or an `OutputStream`. | [Reference](docs/REFERENCE.md#native-11-sixel-integration) |
 
-> [!TIP]
-> See **[REFERENCE.md](docs/REFERENCE.md)** for complete callback listings, SGR color codes, and parsed parameters.
+---
+
+## Technical Demos & Benchmarks
+
+| Case | Java Example | Launcher | Description |
+|---|---|---|---|
+| **Native 1:1 SIXEL Pixels** | [Sixel1To1PixelDemo.java](src/test/java/fastansi/demos/Sixel1To1PixelDemo.java) | `run-sixel.bat` | High-resolution 1:1 native screen pixel graphics using the SIXEL protocol with 6x6x6 color palette. |
+| **Terminal Video & Animation Player** | [Demo.java](src/test/java/fastansi/demos/Demo.java) | `run-demo.bat` | 60 FPS full-terminal video and image playback utilizing TrueColor half-block resolution. |
+| **Half-Block Image Viewer** | [HalfBlockImageDemo.java](src/test/java/fastansi/demos/HalfBlockImageDemo.java) | `run-halfblock.bat` | High-fidelity 24-bit TrueColor image rendering packing 2 vertical pixels per character cell (`▀`). |
+| **CLI Video & Image Converter** | [Converter.java](src/main/java/fastansi/cli/Converter.java) | `run-converter.bat` | Headless conversion utility exporting images and video frames to `.ansi` text files and scripts. |
+| **JMH Microbenchmark Suite** | [Benchmark.java](examples/Benchmark/src/main/java/fastansi/benchmark/Benchmark.java) | `run-benchmark.bat` | OpenJDK JMH microbenchmarks measuring parser throughput and ANSI stripping execution latency. |
 
 ---
 
@@ -202,37 +216,6 @@ Download the latest JAR directly to add it to your classpath:
 
 ---
 
-## Technical Examples & Demos
-
-FastANSI includes executable scripts and code patterns to demonstrate its high-speed TrueColor and formatting capabilities:
-
-| Case                       | Execution Command    | Performance / Demo                         | Details                                                                                                          |
-|----------------------------|----------------------|--------------------------------------------|------------------------------------------------------------------------------------------------------------------|
-| Native 1:1 SIXEL Pixels    | `run-sixel.bat`      | True 1:1 screen pixel rendering            | Demonstrates native SIXEL 1:1 pixel rendering with square aspect ratio and 6x6x6 TrueColor quantization.         |
-| Terminal Video Player      | `run-demo.bat`       | High-speed 60 FPS video and image playback | Uses `ffmpeg` to pre-load videos into ANSI strings, demonstrating TrueColor `HALF_BLOCK` resolution rendering. |
-| CLI Video to ANSI Converter| `run-converter.bat`  | Headless terminal conversion toolkit       | A CLI utility to export images and videos to self-playing `.sh`/`.bat` scripts or raw `.ansi` text files.       |
-
-### Native 1:1 SIXEL Image Rendering Example
-
-```java
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import fastansi.FastAnsiImage;
-
-public class SixelDemo {
-    public static void main(String[] args) throws Exception {
-        BufferedImage img = ImageIO.read(new File("image.png"));
-
-        // Output image to stdout as a native 1:1 SIXEL pixel stream
-        FastAnsiImage.writeSixel(img, System.out);
-
-        // Or convert to a raw SIXEL escape sequence string
-        String sixelString = FastAnsiImage.toSixel(img);
-    }
-}
-```
-
 ## Documentation
 
 * **[SIXEL.md](docs/SIXEL.md)**: SIXEL 1:1 native pixel graphics guide and protocol specification.
@@ -272,4 +255,4 @@ MIT License — See [LICENSE](LICENSE) file for details.
 
 ---
 
-**Part of the FastJava Ecosystem** — *Making the JVM faster. Small package. Maximum speed. Zero bloat. 🚀📋*
+**Part of the FastJava Ecosystem** — *Making the JVM faster.* 🚀
