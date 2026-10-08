@@ -253,14 +253,13 @@ MIT License — See [LICENSE](LICENSE) file for details.
 
 ## Related Projects
 
-- [FastTerminal](https://github.com/andrestubbe/FastTerminal)
-- [FastANSI](https://github.com/andrestubbe/FastANSI)
-- [FastEmojis](https://github.com/andrestubbe/FastEmojis)
-- [FastUI](https://github.com/andrestubbe/FastUI)
-- [FastGrid](https://github.com/andrestubbe/FastGrid)
-- [FastProportion](https://github.com/andrestubbe/FastProportion)
-- [FastTheme](https://github.com/andrestubbe/FastTheme)
-- [FastCore](https://github.com/andrestubbe/FastCore)
+- [FastASCII](https://github.com/andrestubbe/FastASCII) — Zero-allocation ASCII/UTF-8 byte engine and primitive parser
+- [FastCLICommand](https://github.com/andrestubbe/FastCLICommand) — Zero-allocation, ultra-fast command-line parser and dispatcher
+- [FastConPTY](https://github.com/andrestubbe/FastConPTY) — High-performance native Windows ConPTY pseudo-terminal backend
+- [FastTerminal](https://github.com/andrestubbe/FastTerminal) — High-performance True-Color double-buffered terminal rendering engine
+- [FastTerminal3D](https://github.com/andrestubbe/FastTerminal3D) — Real-time software 3D rasterization bridge inside the terminal
+- [FastTUI](https://github.com/andrestubbe/FastTUI) — High-performance native Windows TUI framework with mouse support and widgets
+- [FastCore](https://github.com/andrestubbe/FastCore) — Native library loader, FFM gateway, and platform abstraction layer
 
 ---
 
